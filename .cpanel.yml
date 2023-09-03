@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/bvsnepal/public_html/apps.bvsnepal.org
+    - /bin/cp -r build $DEPLOYPATH

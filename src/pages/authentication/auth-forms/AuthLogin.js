@@ -28,11 +28,13 @@ import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { useUserActions } from 'hooks/user.actions';
 
 // ============================|| FIREBASE - LOGIN ||============================ //
 
 const AuthLogin = () => {
   const [checked, setChecked] = React.useState(false);
+  const userActions = useUserActions();
 
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
@@ -47,8 +49,8 @@ const AuthLogin = () => {
     <>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          email: 'raja@fake.com',
+          password: '12345678',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -57,6 +59,11 @@ const AuthLogin = () => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
+            userActions.login(values).catch((err) => {
+              if (err.message) {
+                setErrors(err.request.response);
+              }
+            });
             setStatus({ success: false });
             setSubmitting(false);
           } catch (err) {

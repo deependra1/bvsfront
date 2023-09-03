@@ -7,7 +7,11 @@ import {
   FontSizeOutlined,
   LoadingOutlined
 } from '@ant-design/icons';
-
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import WorkIcon from '@mui/icons-material/Work';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import TempleBuddhistIcon from '@mui/icons-material/TempleBuddhist';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 // icons
 const icons = {
   FontSizeOutlined,
@@ -15,7 +19,12 @@ const icons = {
   BarcodeOutlined,
   AntDesignOutlined,
   LoadingOutlined,
-  AppstoreAddOutlined
+  AppstoreAddOutlined,
+  VolunteerActivismIcon,
+  WorkIcon,
+  Diversity3Icon,
+  TempleBuddhistIcon,
+  FamilyRestroomIcon
 };
 
 // ==============================|| MENU ITEMS - UTILITIES ||============================== //
@@ -26,33 +35,41 @@ const utilities = {
   type: 'group',
   children: [
     {
-      id: 'util-typography',
-      title: 'Typography',
+      id: 'util-donor',
+      title: 'Donors',
       type: 'item',
-      url: '/typography',
-      icon: icons.FontSizeOutlined
+      url: '/add-donor',
+      icon: icons.VolunteerActivismIcon
     },
     {
-      id: 'util-color',
-      title: 'Color',
+      id: 'util-occupation',
+      title: 'Occupations',
       type: 'item',
-      url: '/color',
-      icon: icons.BgColorsOutlined
+      url: '/add-occupation',
+      icon: icons.WorkIcon
     },
     {
-      id: 'util-shadow',
-      title: 'Shadow',
+      id: 'util-ethnic',
+      title: 'Ethnic Group',
       type: 'item',
-      url: '/shadow',
-      icon: icons.BarcodeOutlined
+      url: '/add-ethnic',
+      icon: icons.Diversity3Icon
     },
     {
-      id: 'ant-icons',
-      title: 'Ant Icons',
+      id: 'ant-religion',
+      title: 'Religion',
       type: 'item',
-      url: '/icons/ant',
-      icon: icons.AntDesignOutlined,
+      url: 'add-religion',
+      icon: icons.TempleBuddhistIcon,
       breadcrumbs: false
+    },
+    {
+      id: 'ant-family',
+      title: 'Family Type',
+      type: 'item',
+      url: '/add-family',
+      icon: icons.FamilyRestroomIcon
+      // breadcrumbs: false
     }
   ]
 };

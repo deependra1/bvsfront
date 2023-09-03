@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e1f2bb6b.css",
+    "main.js": "/static/js/main.db999337.js",
+    "static/js/243.272028c4.chunk.js": "/static/js/243.272028c4.chunk.js",
+    "static/js/734.6972b62d.chunk.js": "/static/js/734.6972b62d.chunk.js",
+    "static/js/6.0c617301.chunk.js": "/static/js/6.0c617301.chunk.js",
+    "static/js/525.06e4dac1.chunk.js": "/static/js/525.06e4dac1.chunk.js",
+    "static/js/893.4eac493c.chunk.js": "/static/js/893.4eac493c.chunk.js",
+    "static/js/165.08966027.chunk.js": "/static/js/165.08966027.chunk.js",
+    "static/js/346.7b057f13.chunk.js": "/static/js/346.7b057f13.chunk.js",
+    "static/js/819.b3eb1e94.chunk.js": "/static/js/819.b3eb1e94.chunk.js",
+    "static/js/522.3e90a576.chunk.js": "/static/js/522.3e90a576.chunk.js",
+    "static/js/275.c23cff32.chunk.js": "/static/js/275.c23cff32.chunk.js",
+    "static/media/axios.cjs": "/static/media/axios.e7d77f0967a69d31d7fc.cjs",
+    "static/media/logo_me.svg": "/static/media/logo_me.c00224facf9c70d2c061d191324d2cdc.svg",
+    "static/media/google.svg": "/static/media/google.a025da87054139fc16b3b9b7ed0a2724.svg",
+    "static/media/twitter.svg": "/static/media/twitter.3e49f64208e00f377e9c3dbeaed797ce.svg",
+    "index.html": "/index.html",
+    "static/media/facebook.svg": "/static/media/facebook.eb4c069b746811e7b3a7ddf099989a69.svg"
+  },
+  "entrypoints": [
+    "static/css/main.e1f2bb6b.css",
+    "static/js/main.db999337.js"
+  ]
+}
