@@ -20,6 +20,8 @@ import EthnicDetail from 'pages/add-extra/ethnic/EthnicDetail';
 import ReligionDetail from 'pages/add-extra/religion/ReligionDetail';
 import FamilyDetail from 'pages/add-extra/family/FamilyDetail';
 import UserDetails from 'pages/users_details/UserDetails';
+import BurnCauseDetail from 'pages/add-extra/burnCause/BurnCauseDetail';
+import BurnTypeDetail from 'pages/add-extra/burnType/BurnTypeDetail';
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -121,6 +123,14 @@ const MainRoutes = {
     {
       path: '/add-family',
       element: <FamilyDetail />
+    },
+    {
+      path: '/add-burn-cause',
+      element: <BurnCauseDetail />
+    },
+    {
+      path: '/add-burn-type',
+      element: <BurnTypeDetail />
     },
 
     {

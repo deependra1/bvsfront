@@ -39,24 +39,27 @@ const utilities = {
       title: 'Donors',
       type: 'item',
       url: '/add-donor',
-      icon: icons.VolunteerActivismIcon
+      icon: icons.VolunteerActivismIcon,
+      breadcrumbs: false
     },
     {
       id: 'util-occupation',
       title: 'Occupations',
       type: 'item',
       url: '/add-occupation',
-      icon: icons.WorkIcon
+      icon: icons.WorkIcon,
+      breadcrumbs: false
     },
     {
       id: 'util-ethnic',
       title: 'Ethnic Group',
       type: 'item',
       url: '/add-ethnic',
-      icon: icons.Diversity3Icon
+      icon: icons.Diversity3Icon,
+      breadcrumbs: false
     },
     {
-      id: 'ant-religion',
+      id: 'util-religion',
       title: 'Religion',
       type: 'item',
       url: 'add-religion',
@@ -64,12 +67,28 @@ const utilities = {
       breadcrumbs: false
     },
     {
-      id: 'ant-family',
+      id: 'util-family',
       title: 'Family Type',
       type: 'item',
       url: '/add-family',
-      icon: icons.FamilyRestroomIcon
-      // breadcrumbs: false
+      icon: icons.FamilyRestroomIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'util-btype',
+      title: 'Burn Type',
+      type: 'item',
+      url: '/add-burn-type',
+      icon: icons.FamilyRestroomIcon,
+      breadcrumbs: false
+    },
+    {
+      id: 'util-bcause',
+      title: 'Burn Cause',
+      type: 'item',
+      url: '/add-burn-cause',
+      icon: icons.FamilyRestroomIcon,
+      breadcrumbs: false
     }
   ]
 };

@@ -17,6 +17,10 @@ import { fetcher } from '../../../helpers/axios';
 import useSWR from 'swr';
 import dayjs from 'dayjs';
 import { getUser } from 'hooks/user.actions';
+import AddressInfo from './AddressInfo';
+import EchoPhyInfo from './EchoPhyInfo';
+
+const phoneRegExp = /^([+]\d{2})?\d{10}$/;
 
 const FormWizard = () => {
   const { patientId } = useParams();
@@ -38,37 +42,65 @@ const FormWizard = () => {
     fname: patientData?.fname || '',
     lname: patientData?.lname || '',
     mname: patientData?.mname || '',
+
     country: patientData?.country || '',
     provence: patientData?.provence || '',
     district: patientData?.district || '',
     local: patientData?.local || '',
-    ward: patientData?.ward || '',
+    ward: patientData?.ward || null,
     tole: patientData?.tole || '',
+    foreign_address: patientData?.foreign_address || '',
+
+    country2: patientData?.country2 || '',
+    provence2: patientData?.provence2 || '',
+    district2: patientData?.district2 || '',
+    local2: patientData?.local2 || '',
+    ward2: patientData?.ward2 || null,
+    tole2: patientData?.tole2 || '',
+    foreign_address2: patientData?.foreign_address2 || '',
+
     date_of_birth: patientData ? dayjs(patientData.date_of_birth) : null,
-    age_at_incident: patientData?.age_at_incident || '',
+    age_at_incident: patientData?.age_at_incident || null,
+    month_at_incident: patientData?.month_at_incident || null,
     gender: patientData?.gender || '',
     citizenship_no: patientData?.citizenship_no || '',
     patient_contact: patientData?.patient_contact || '',
-    parents_contact: patientData?.parents_contact || '',
+    optional_contact: patientData?.optional_contact || '',
+    patient_education: patientData?.patient_education || '',
+    patient_language: patientData?.patient_language || '',
     patient_occupation: patientData ? patientData.patient_occupation.id : '',
-    suppose_occupation: patientData ? patientData.suppose_occupation.id : '',
-    parents_occupation: patientData ? patientData.parents_occupation.id : '',
-
     ethnic_group: patientData ? patientData.ethnic_group.id : '',
     religion: patientData ? patientData.religion.id : '',
-    family_type: patientData ? patientData.family_type.id : '',
     material_status: patientData?.material_status || '',
-    number_of_child: patientData?.number_of_child || '',
-    number_of_siblings: patientData?.number_of_siblings || '',
+
+    parents_contact: patientData?.parents_contact || '',
+    suppose_occupation: patientData ? patientData.suppose_occupation.id : '',
+    parents_occupation: patientData ? patientData.parents_occupation.id : '',
+    family_type: patientData ? patientData.family_type.id : '',
+    number_of_child: patientData?.number_of_child || null,
+    number_of_siblings: patientData?.number_of_siblings || null,
+
+    economic_status: patientData?.economic_status || '',
+    family_support: patientData?.family_support || false,
+    pregnant_women: patientData?.pregnant_women || false,
+    lactating_mother: patientData?.lactating_mother || false,
+    with_disabilities: patientData?.with_disabilities || false,
+    mental_illness: patientData?.mental_illness || false,
+    epilepsy: patientData?.epilepsy || false,
+    hiv_positive: patientData?.hiv_positive || false,
+    echo_other: patientData?.echo_other || '',
 
     date_of_incident: patientData ? dayjs(patientData.date_of_incident) : null,
     area_of_burn: patientData?.area_of_burn || '',
     percentage_of_burn: patientData?.percentage_of_burn || '',
     degree_of_burn: patientData?.degree_of_burn || '',
-    cause_of_burn: patientData?.cause_of_burn || '',
-    type_of_burn: patientData?.type_of_burn || '',
+    burn_cause: patientData?.burn_cause.id || '',
+    burn_type: patientData?.burn_type.id || '',
     place_of_incident: patientData?.place_of_incident || '',
-    description_of_incident: patientData?.description_of_incident || ''
+    description_of_incident: patientData?.description_of_incident || '',
+    person_at_hospital: patientData?.person_at_hospital || '',
+    relation_to_parent: patientData?.relation_to_parent || '',
+    person_contact: patientData?.person_contact || ''
   };
 
   const handleAddPatient = (values) => {
@@ -124,27 +156,47 @@ const FormWizard = () => {
           {
             component: PersonalInfo,
             validationSchema: Yup.object().shape({
-              fname: Yup.string().required('First name is required'),
-              lname: Yup.string().required('Last name is required'),
-              age_at_incident: Yup.number().required('This field is required and numeric field'),
-              gender: Yup.string().required('Gender field is required')
-              // country: Yup.string().required('Country is required'),
-              // provence: Yup.string().required('Provence is required'),
-              // district: Yup.string().required('District is required'),
-              // local: Yup.string().required('Local level is required'),
-              // ward: Yup.string().required('Ward number is required'),
-              // tole: Yup.string().required('Tole is required'),
-              // date_of_birth: Yup.string().required('Date of birth is required'),
-              // age_at_incident: Yup.string().required('Age at incident is required'),
-              // gender: Yup.string().required('Gender is required'),
-              // citizenship_no: Yup.string().required('Citizenship number is required')
+              fname: Yup.string().required('Required'),
+              lname: Yup.string().required('Required'),
+              age_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').notRequired().nullable(),
+              month_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').notRequired().nullable(),
+              date_of_birth: Yup.date().required('Required'),
+              patient_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
+              optional_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
+              patient_occupation: Yup.string().required('Required'),
+              ethnic_group: Yup.string().required('Required'),
+              religion: Yup.string().required('Required')
             })
           },
           {
-            component: FamilyInfo
+            component: AddressInfo,
+            validationSchema: Yup.object().shape({
+              country: Yup.string().required('Please Secect Country'),
+              country2: Yup.string().required('Please Secect Country')
+            })
           },
           {
-            component: IncidentDetail
+            component: FamilyInfo,
+            validationSchema: Yup.object().shape({
+              parents_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
+              number_of_child: Yup.number().positive('Must be Positive').integer('Must be a number').notRequired().nullable(),
+              number_of_siblings: Yup.number().positive('Must be Positive').integer('Must be a number').notRequired().nullable(),
+              suppose_occupation: Yup.string().required('Required'),
+              parents_occupation: Yup.string().required('Required'),
+              family_type: Yup.string().required('Required')
+            })
+          },
+          {
+            component: EchoPhyInfo
+          },
+          {
+            component: IncidentDetail,
+            validationSchema: Yup.object().shape({
+              date_of_incident: Yup.date().required('Required'),
+              person_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
+              burn_cause: Yup.string().required('Required'),
+              burn_type: Yup.string().required('Required')
+            })
           }
         ]}
       >
@@ -156,12 +208,21 @@ const FormWizard = () => {
                   <Step completed={currentStepIndex > 0}>
                     <StepLabel>Registration</StepLabel>
                   </Step>
+
                   <Step completed={currentStepIndex > 1}>
                     <StepLabel>Personal Information</StepLabel>
                   </Step>
 
                   <Step completed={currentStepIndex > 2}>
+                    <StepLabel>Address Information</StepLabel>
+                  </Step>
+
+                  <Step completed={currentStepIndex > 3}>
                     <StepLabel>Family Information</StepLabel>
+                  </Step>
+
+                  <Step completed={currentStepIndex > 4}>
+                    <StepLabel>Ecnomic/Physical/Health Status</StepLabel>
                   </Step>
 
                   <Step completed={finished}>
@@ -175,7 +236,7 @@ const FormWizard = () => {
                   Previous
                 </Button>
                 <Button variant="contained" disabled={isNextDisabled} type="primary" onClick={handleNext}>
-                  {currentStepIndex === 3 ? 'Finish' : 'Next'}
+                  {currentStepIndex === 5 ? 'Finish' : 'Next'}
                 </Button>
               </Box>
               <Box>

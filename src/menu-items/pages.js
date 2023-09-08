@@ -27,7 +27,8 @@ const pages = {
       title: 'Register',
       type: 'item',
       url: '/register',
-      icon: icons.ProfileOutlined
+      icon: icons.ProfileOutlined,
+      breadcrumbs: false
       // target: true
     }
   ]

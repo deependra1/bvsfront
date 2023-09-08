@@ -1,9 +1,20 @@
-import { Grid, InputLabel, Stack, TextField } from '@mui/material';
+import { Grid, InputLabel, Stack, TextField, Select, MenuItem, FormHelperText } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import useSWR from 'swr';
+import { fetcher } from 'helpers/axios';
 
-const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
+const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, handleBlur }) => {
+  const { data: causeData, error: causeError, isLoading: causeLoading } = useSWR(`/burn_cause/`, fetcher, { revalidateOnMount: true });
+  const { data: typeData, error: typeError, isLoading: typeLoading } = useSWR(`/burn_type/`, fetcher, { revalidateOnMount: true });
+  if (causeLoading || typeLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (causeError || typeError) {
+    return <div>Error on Data</div>;
+  }
   return (
     <>
       <Grid container spacing={3}>
@@ -16,10 +27,15 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
                 name="date_of_incident"
                 views={['year', 'month', 'day']}
                 value={values.date_of_incident}
-                // onBlur={handleBlur}
+                onBlur={handleBlur}
                 onChange={(newValue) => setFieldValue('date_of_incident', newValue, true)}
-                // error={Boolean(touched.date_of_incident && errors.date_of_incident)}
+                error={Boolean(touched.date_of_incident && errors.date_of_incident)}
               />
+              {errors.date_of_incident && (
+                <FormHelperText error id="standard-weight-helper-text-date_of_incident">
+                  {errors.date_of_incident}
+                </FormHelperText>
+              )}
             </LocalizationProvider>
           </Stack>
         </Grid>
@@ -31,11 +47,10 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
             <InputLabel htmlFor="area_of_burn">Area of Burn</InputLabel>
             <TextField
               fullWidth
-              error={!!errors.area_of_burn}
               name="area_of_burn"
               value={values.area_of_burn}
-              helperText={errors.area_of_burn}
               onChange={handleChange}
+              error={Boolean(touched.area_of_burn && errors.area_of_burn)}
             />
           </Stack>
         </Grid>
@@ -48,11 +63,10 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
             <TextField
               fullWidth
               type="number"
-              error={!!errors.percentage_of_burn}
               name="percentage_of_burn"
               value={values.percentage_of_burn}
-              helperText={errors.percentage_of_burn}
               onChange={handleChange}
+              error={Boolean(touched.percentage_of_burn && errors.percentage_of_burn)}
             />
           </Stack>
         </Grid>
@@ -62,15 +76,20 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
         <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="degree_of_burn">Degree of Burn</InputLabel>
-            <TextField
-              fullWidth
-              type="number"
-              error={!!errors.degree_of_burn}
+            <Select
+              aria-labelledby="degree_of_burn"
+              defaultValue={values.degree_of_burn}
               name="degree_of_burn"
-              value={values.degree_of_burn}
-              helperText={errors.degree_of_burn}
+              values={values.degree_of_burn}
               onChange={handleChange}
-            />
+              error={Boolean(touched.degree_of_burn && errors.degree_of_burn)}
+            >
+              <MenuItem value="I">I</MenuItem>
+              <MenuItem value="II">II</MenuItem>
+              <MenuItem value="III">III</MenuItem>
+              <MenuItem value="IV">IV</MenuItem>
+              <MenuItem value="NA">NA</MenuItem>
+            </Select>
           </Stack>
         </Grid>
         {/* end of degree of burn */}
@@ -78,15 +97,26 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
         {/* Cause of burn */}
         <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="cause_of_burn">Cause of Burn</InputLabel>
-            <TextField
-              fullWidth
-              error={!!errors.cause_of_burn}
-              name="cause_of_burn"
-              value={values.cause_of_burn}
-              helperText={errors.cause_of_burn}
+            <InputLabel htmlFor="burn_cause">Cause of Burn</InputLabel>
+            <Select
+              labelId="burn_cause"
+              id="burn_cause"
+              value={values.burn_cause}
+              name="burn_cause"
               onChange={handleChange}
-            />
+              error={Boolean(touched.burn_cause && errors.burn_cause)}
+            >
+              {causeData.map((cause) => (
+                <MenuItem key={cause.id} value={cause.id}>
+                  {cause.burn_cause}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.burn_cause && (
+              <FormHelperText error id="standard-weight-helper-text-burn_cause">
+                {errors.burn_cause}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
         {/* end of Cause of burn */}
@@ -94,15 +124,26 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
         {/* Type of burn */}
         <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="type_of_burn">Type of Burn</InputLabel>
-            <TextField
-              fullWidth
-              error={!!errors.type_of_burn}
-              name="type_of_burn"
-              value={values.type_of_burn}
-              helperText={errors.type_of_burn}
+            <InputLabel htmlFor="burn_type">Type of Burn</InputLabel>
+            <Select
+              labelId="burn_type"
+              id="burn_type"
+              value={values.burn_type}
+              name="burn_type"
               onChange={handleChange}
-            />
+              error={Boolean(touched.burn_type && errors.burn_type)}
+            >
+              {typeData.map((type) => (
+                <MenuItem key={type.id} value={type.id}>
+                  {type.burn_type}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.burn_type && (
+              <FormHelperText error id="standard-weight-helper-text-burn_type">
+                {errors.burn_type}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
         {/* end of Type of burn */}
@@ -110,18 +151,67 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
         {/* Place of burn */}
         <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="place_of_incident">Place of Incident</InputLabel>
+            <InputLabel htmlFor="relation_to_parent">Place of Incident</InputLabel>
             <TextField
               fullWidth
-              error={!!errors.place_of_incident}
-              name="place_of_incident"
-              value={values.place_of_incident}
-              helperText={errors.place_of_incident}
+              name="relation_to_parent"
+              value={values.relation_to_parent}
               onChange={handleChange}
+              error={Boolean(touched.relation_to_parent && errors.relation_to_parent)}
             />
           </Stack>
         </Grid>
         {/* end of Place of burn */}
+
+        {/* person at hospital */}
+        <Grid item xs={12} md={4}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="person_at_hospital">Person at Hospital</InputLabel>
+            <TextField
+              fullWidth
+              name="person_at_hospital"
+              value={values.person_at_hospital}
+              onChange={handleChange}
+              error={Boolean(touched.person_at_hospital && errors.person_at_hospital)}
+            />
+          </Stack>
+        </Grid>
+        {/* end of person at hospital */}
+
+        {/* Relationship with Patient */}
+        <Grid item xs={12} md={4}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="place_of_incident">Relationship with Patient</InputLabel>
+            <TextField
+              fullWidth
+              name="place_of_incident"
+              value={values.place_of_incident}
+              onChange={handleChange}
+              error={Boolean(touched.place_of_incident && errors.place_of_incident)}
+            />
+          </Stack>
+        </Grid>
+        {/* end of Relationship with Patient */}
+
+        {/* Contact of Person */}
+        <Grid item xs={12} md={4}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="person_contact">Person Contact</InputLabel>
+            <TextField
+              fullWidth
+              name="person_contact"
+              value={values.person_contact}
+              onChange={handleChange}
+              error={Boolean(touched.person_contact && errors.person_contact)}
+            />
+            {errors.person_contact && (
+              <FormHelperText error id="standard-weight-helper-text-person_contact">
+                {errors.person_contact}
+              </FormHelperText>
+            )}
+          </Stack>
+        </Grid>
+        {/* end of Contact of Person */}
 
         {/* description */}
         <Grid item xs={12}>
@@ -131,10 +221,9 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue }) => {
               fullWidth
               multiline
               rows={4}
-              error={!!errors.description_of_incident}
               name="description_of_incident"
               value={values.description_of_incident}
-              helperText={errors.description_of_incident}
+              error={Boolean(touched.description_of_incident && errors.description_of_incident)}
               onChange={handleChange}
             />
           </Stack>

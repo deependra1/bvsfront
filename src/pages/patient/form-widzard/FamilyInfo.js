@@ -1,89 +1,129 @@
-import { Grid, InputLabel, Stack, Select, MenuItem, RadioGroup, FormControlLabel, Radio, OutlinedInput } from '@mui/material';
+import { Grid, InputLabel, Stack, Select, MenuItem, OutlinedInput, TextField, FormHelperText } from '@mui/material';
 import useSWR from 'swr';
 import { fetcher } from 'helpers/axios';
 
-const FamilyInfo = ({ errors, values, handleChange }) => {
-  const { data: ethnicData, ethnicError, isLoading: ethnicLoading } = useSWR(`/ethnic/`, fetcher, { revalidateOnMount: true });
-  const { data: familyData, familyError, isLoading: familyLoading } = useSWR(`/family/`, fetcher, { revalidateOnMount: true });
-  const { data: religionData, religionError, isLoading: religionLoading } = useSWR(`/religion/`, fetcher, { revalidateOnMount: true });
+const FamilyInfo = ({ errors, values, handleChange, touched }) => {
+  const { data: familyData, error: familyError, isLoading: familyLoading } = useSWR(`/family/`, fetcher, { revalidateOnMount: true });
+  const {
+    data: occupationData,
+    error: occupationError,
+    isLoading: occupationLoading
+  } = useSWR(`/occupation/`, fetcher, { revalidateOnMount: true });
 
-  if (ethnicLoading || familyLoading || religionLoading) {
+  if (familyLoading || occupationLoading) {
     return <div>Loading...</div>;
   }
 
-  if (ethnicError || familyError || religionError) {
+  if (familyError || occupationError) {
     return <div>Error on Data</div>;
   }
 
   return (
     <>
       <Grid container spacing={3}>
-        {/* Ethnic Group */}
-        <Grid item xs={12} md={3}>
+        {/* parent contact */}
+        <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="ethnic_group">Ethnic Group</InputLabel>
-            <Select labelId="ethnic_group" id="ethnic_group" value={values.ethnic_group} name="ethnic_group" onChange={handleChange}>
-              {ethnicData.map((ethnic) => (
-                <MenuItem key={ethnic.id} value={ethnic.id}>
-                  {ethnic.ethnic_group}
-                </MenuItem>
-              ))}
-            </Select>
+            <InputLabel htmlFor="parents_contact">Patient Parents Contacts</InputLabel>
+            <TextField
+              fullWidth
+              name="parents_contact"
+              value={values.parents_contact}
+              onChange={handleChange}
+              error={Boolean(touched.parents_contact && errors.parents_contact)}
+            />
+            {errors.parents_contact && (
+              <FormHelperText error id="standard-weight-helper-text-parents_contact">
+                {errors.parents_contact}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
-        {/* End of Ethnic Group */}
-
-        {/* Religions */}
-        <Grid item xs={12} md={3}>
-          <Stack spacing={1}>
-            <InputLabel htmlFor="religion">Religion</InputLabel>
-            <Select labelId="religion" id="religion" value={values.religion} name="religion" onChange={handleChange}>
-              {religionData.map((religion) => (
-                <MenuItem key={religion.id} value={religion.id}>
-                  {religion.religion}
-                </MenuItem>
-              ))}
-            </Select>
-          </Stack>
-        </Grid>
-        {/* End of Religions Group */}
+        {/* end of parent contact */}
 
         {/* family type */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={1}>
             <InputLabel htmlFor="family_type">Family Type</InputLabel>
-            <Select labelId="family_type" id="family_type" value={values.family_type} name="family_type" onChange={handleChange}>
+            <Select
+              labelId="family_type"
+              id="family_type"
+              value={values.family_type}
+              name="family_type"
+              onChange={handleChange}
+              error={Boolean(touched.family_type && errors.family_type)}
+            >
               {familyData.map((family) => (
                 <MenuItem key={family.id} value={family.id}>
                   {family.family_type}
                 </MenuItem>
               ))}
             </Select>
+            {errors.family_type && (
+              <FormHelperText error id="standard-weight-helper-text-family_type">
+                {errors.family_type}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
         {/* end of family type */}
 
-        {/* material Status */}
-        <Grid item xs={12} md={3}>
+        {/* s occupation */}
+        <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="material_status">Material Status</InputLabel>
-            <RadioGroup
-              row
-              aria-labelledby="material_status"
-              defaultValue={values.material_status}
-              name="material_status"
-              values={values.material_status}
+            <InputLabel htmlFor="suppose_occupation">Spouse Occupation</InputLabel>
+            <Select
+              labelId="suppose_occupation"
+              id="suppose_occupation"
+              value={values.suppose_occupation}
+              name="suppose_occupation"
               onChange={handleChange}
+              error={Boolean(touched.suppose_occupation && errors.suppose_occupation)}
             >
-              <FormControlLabel value="Married" control={<Radio />} label="Married" />
-              <FormControlLabel value="Unmarried" control={<Radio />} label="Unmarried" />
-            </RadioGroup>
+              {occupationData.map((occupation) => (
+                <MenuItem key={occupation.id} value={occupation.id}>
+                  {occupation.occupation_name}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.suppose_occupation && (
+              <FormHelperText error id="standard-weight-helper-text-suppose_occupation">
+                {errors.suppose_occupation}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
-        {/* end of gender */}
+        {/* end of s occupation */}
+
+        {/* p occup */}
+        <Grid item xs={12} md={4}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="parents_occupation">Parents Occupation</InputLabel>
+            <Select
+              labelId="parents_occupation"
+              id="parents_occupation"
+              value={values.parents_occupation}
+              name="parents_occupation"
+              onChange={handleChange}
+              error={Boolean(touched.parents_occupation && errors.parents_occupation)}
+            >
+              {occupationData.map((occupation) => (
+                <MenuItem key={occupation.id} value={occupation.id}>
+                  {occupation.occupation_name}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.parents_occupation && (
+              <FormHelperText error id="standard-weight-helper-text-parents_occupation">
+                {errors.parents_occupation}
+              </FormHelperText>
+            )}
+          </Stack>
+        </Grid>
+        {/* end of p occup */}
 
         {/* number of child */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={1}>
             <InputLabel htmlFor="number_of_child">Number of Child</InputLabel>
             <OutlinedInput
@@ -99,7 +139,7 @@ const FamilyInfo = ({ errors, values, handleChange }) => {
         {/* end of number of child */}
 
         {/* number of Siblings */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <Stack spacing={1}>
             <InputLabel htmlFor="number_of_siblings">Number of Siblings</InputLabel>
             <OutlinedInput

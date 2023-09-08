@@ -22,6 +22,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
+// import { Container } from '../../../node_modules/@mui/material/index';
 
 // initial dialog setting
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -86,46 +87,101 @@ export default function AddPatientTreatment() {
   // DataGrid column initalization
   const columns = [
     {
+      field: 'mode_of_transport',
+      headerName: 'Transport',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'distance',
+      headerName: 'Distance',
+      width: 70,
+      editable: true
+    },
+    {
       field: 'hospital',
       headerName: 'Hospital',
-      width: 200,
+      width: 70,
       editable: true
     },
     {
       field: 'doctor_name',
       headerName: 'Doctor',
-      width: 100,
+      width: 70,
       editable: true
     },
     {
       field: 'hospitalized_date',
-      headerName: 'Hospitalized Date',
-      width: 100,
+      headerName: 'Hospitalized',
+      width: 85,
       editable: true
     },
     {
       field: 'dischared_date',
-      headerName: 'Dischared Date',
-      width: 100,
+      headerName: 'Dischared',
+      width: 70,
       editable: true
     },
     {
       field: 'expired_date',
-      headerName: 'Expired Date',
-      width: 100,
+      headerName: 'Expired',
+      width: 70,
       editable: true
     },
     {
-      field: 'current_status',
-      headerName: 'Current Status',
-      width: 100,
+      field: 'duration_of_stay',
+      headerName: 'Duration',
+      width: 70,
       editable: true
     },
+    {
+      field: 'no_of_surgery',
+      headerName: 'Surgery',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'no_of_skin_graft',
+      headerName: 'Skin Graft',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'no_of_debridement',
+      headerName: 'Debridement',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'no_of_amputation',
+      headerName: 'Amputation',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'no_of_dressing',
+      headerName: 'Dressing',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'no_of_nutritional',
+      headerName: 'Nutration',
+      width: 70,
+      editable: true
+    },
+    {
+      field: 'medical_support',
+      headerName: 'Medical',
+      width: 70,
+      editable: true
+    },
+
     {
       field: 'actions',
       headerName: 'Actions',
       type: 'actions',
-      width: 100,
+      width: 70,
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handleEdit(params)} sx={{ color: '#9c27b0' }}>
@@ -146,6 +202,7 @@ export default function AddPatientTreatment() {
   };
 
   const handleClose = () => {
+    setSelectedTreatment({});
     setOpen(false);
   };
   // end of dialog open and close
@@ -171,6 +228,7 @@ export default function AddPatientTreatment() {
   };
 
   const handleAddTreatment = (values, { setErrors, setStatus, setSubmitting }) => {
+    // alert(JSON.stringify(values, null, 2));
     if (selectedTreatment.id) {
       axiosService
         .put(`/patient/${patientId}/treatment/${selectedTreatment.id}/`, values)
@@ -232,20 +290,26 @@ export default function AddPatientTreatment() {
       </Grid>
 
       {/* data grid */}
+
       <DataGrid
         rows={treatmentData}
         columns={columns}
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 5
+              pageSize: 10
             }
           }
         }}
-        pageSizeOptions={[5]}
+        pageSizeOptions={[10]}
         // checkboxSelection
         disableRowSelectionOnClick
+        // sx={{
+        //   maxWidth: '80%',
+        //   overflow: 'hidden'
+        // }}
       />
+
       {/* end of data grid */}
       <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
@@ -260,14 +324,31 @@ export default function AddPatientTreatment() {
             doctor_name: selectedTreatment?.doctor_name || '',
             dischared_date: selectedTreatment.id ? dayjs(selectedTreatment.dischared_date) : null,
             expired_date: selectedTreatment.id ? dayjs(selectedTreatment.expired_date) : null,
-            current_status: selectedTreatment?.current_status || ''
+            mode_of_transport: selectedTreatment?.mode_of_transport || '',
+            distance: selectedTreatment?.distance || null,
+            duration_of_stay: selectedTreatment?.duration_of_stay || null,
+            no_of_surgery: selectedTreatment?.no_of_surgery || null,
+            no_of_skin_graft: selectedTreatment?.no_of_skin_graft || null,
+            no_of_debridement: selectedTreatment?.no_of_debridement || null,
+            no_of_amputation: selectedTreatment?.no_of_amputation || null,
+            no_of_dressing: selectedTreatment?.no_of_dressing || null,
+            no_of_nutritional: selectedTreatment?.no_of_nutritional || null,
+            medical_support: selectedTreatment?.medical_support || null
           }}
           validationSchema={Yup.object().shape({
-            hospital: Yup.string().required('Hospital name is required'),
-            hospitalized_date: Yup.date().typeError('Hospitalized date is required'),
-            dischared_date: Yup.date().typeError('Dischared date is required'),
-            doctor_name: Yup.string().required('Doctor name is required'),
-            current_status: Yup.string().required('Current Status is required')
+            hospital: Yup.string().required('Required'),
+            hospitalized_date: Yup.date().typeError('Required').required('Required'),
+            doctor_name: Yup.string().required('Required'),
+            mode_of_transport: Yup.string().required('Required'),
+            distance: Yup.number().positive().integer().notRequired().nullable(),
+            duration_of_stay: Yup.number().positive().integer().notRequired().nullable(),
+            no_of_surgery: Yup.number().positive().integer().notRequired().nullable(),
+            no_of_skin_graft: Yup.number().positive().integer().notRequired().nullable(),
+            no_of_debridement: Yup.number().positive().integer().notRequired().nullable(),
+            no_of_amputation: Yup.number().positive().integer().notRequired().nullable(),
+            no_of_dressing: Yup.number().positive().integer().notRequired().nullable(),
+            no_of_nutritional: Yup.number().positive().integer().notRequired().nullable(),
+            medical_support: Yup.number().positive().integer().notRequired().nullable()
           })}
           onSubmit={handleAddTreatment}
         >
@@ -275,30 +356,56 @@ export default function AddPatientTreatment() {
             <Form noValidate>
               <DialogContent dividers>
                 <Grid container spacing={3}>
-                  {/* doa */}
-                  <Grid item xs={12} md={4}>
+                  {/* mode of transport */}
+                  <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="dob">Hospitalized Date*</InputLabel>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          name="hospitalized_date"
-                          views={['year', 'month', 'day']}
-                          value={values.hospitalized_date}
-                          onChange={(newValue) => setFieldValue('hospitalized_date', newValue, true)}
-                          error={Boolean(touched.hospitalized_date && errors.hospitalized_date)}
-                        />
-                        {touched.hospitalized_date && errors.hospitalized_date && (
-                          <FormHelperText error id="standard-weight-helper-text-hospitalized_date">
-                            {errors.hospitalized_date}
-                          </FormHelperText>
-                        )}
-                      </LocalizationProvider>
+                      <InputLabel htmlFor="mode_of_transport">Mode of Transport*</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="mode_of_transport"
+                        type="text"
+                        value={values.mode_of_transport}
+                        name="mode_of_transport"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Mode of Transport"
+                        error={Boolean(touched.mode_of_transport && errors.mode_of_transport)}
+                      />
+                      {touched.mode_of_transport && errors.mode_of_transport && (
+                        <FormHelperText error id="standard-weight-helper-text-mode_of_transport">
+                          {errors.mode_of_transport}
+                        </FormHelperText>
+                      )}
                     </Stack>
                   </Grid>
-                  {/* end of doa */}
+                  {/* end of mode of transport */}
+
+                  {/* Distance */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="distance">Distance*</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="distance"
+                        type="number"
+                        value={values.distance}
+                        name="distance"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Distance"
+                        error={Boolean(touched.distance && errors.distance)}
+                      />
+                      {touched.distance && errors.distance && (
+                        <FormHelperText error id="standard-weight-helper-text-distance">
+                          {errors.distance}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of Distance */}
 
                   {/* hospital info */}
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="hospital">Hospital*</InputLabel>
                       <OutlinedInput
@@ -322,7 +429,7 @@ export default function AddPatientTreatment() {
                   {/* end of hospital info */}
 
                   {/* doctor info */}
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="doctor_name">Doctor Name*</InputLabel>
                       <OutlinedInput
@@ -345,8 +452,30 @@ export default function AddPatientTreatment() {
                   </Grid>
                   {/* end of doctor info*/}
 
+                  {/* doa */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="dob">Hospitalized Date*</InputLabel>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          name="hospitalized_date"
+                          views={['year', 'month', 'day']}
+                          value={values.hospitalized_date}
+                          onChange={(newValue) => setFieldValue('hospitalized_date', newValue, true)}
+                          error={Boolean(touched.hospitalized_date && errors.hospitalized_date)}
+                        />
+                        {touched.hospitalized_date && errors.hospitalized_date && (
+                          <FormHelperText error id="standard-weight-helper-text-hospitalized_date">
+                            {errors.hospitalized_date}
+                          </FormHelperText>
+                        )}
+                      </LocalizationProvider>
+                    </Stack>
+                  </Grid>
+                  {/* end of doa */}
+
                   {/* dischared date */}
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="dischared_date">Dischared Date*</InputLabel>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -368,9 +497,9 @@ export default function AddPatientTreatment() {
                   {/* end of dischared date*/}
 
                   {/* death date */}
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="lastname">Expired Date</InputLabel>
+                      <InputLabel htmlFor="expired_date">Expired Date</InputLabel>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           name="expired_date"
@@ -382,29 +511,197 @@ export default function AddPatientTreatment() {
                   </Grid>
                   {/* end of death date */}
 
-                  {/* current status */}
-                  <Grid item xs={12} md={4}>
+                  {/* stay duration */}
+                  <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="current_status">Current Status*</InputLabel>
+                      <InputLabel htmlFor="duration_of_stay">Duration of Stay*</InputLabel>
                       <OutlinedInput
                         fullWidth
-                        id="current_status"
-                        type="text"
-                        value={values.current_status}
-                        name="current_status"
+                        id="duration_of_stay"
+                        type="number"
+                        value={values.duration_of_stay}
+                        name="duration_of_stay"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        placeholder="Enter current_status name"
-                        error={Boolean(touched.current_status && errors.current_status)}
+                        placeholder="in days"
+                        error={Boolean(touched.duration_of_stay && errors.duration_of_stay)}
                       />
-                      {touched.current_status && errors.current_status && (
-                        <FormHelperText error id="standard-weight-helper-text-current_status">
-                          {errors.current_status}
+                      {touched.duration_of_stay && errors.duration_of_stay && (
+                        <FormHelperText error id="standard-weight-helper-text-duration_of_stay">
+                          {errors.duration_of_stay}
                         </FormHelperText>
                       )}
                     </Stack>
                   </Grid>
-                  {/* end of current status */}
+                  {/* end of stay duration */}
+
+                  {/* stay surgery */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="no_of_surgery">Number of Surgery</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="no_of_surgery"
+                        type="number"
+                        value={values.no_of_surgery}
+                        name="no_of_surgery"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Surgery"
+                        error={Boolean(touched.no_of_surgery && errors.no_of_surgery)}
+                      />
+                      {touched.no_of_surgery && errors.no_of_surgery && (
+                        <FormHelperText error id="standard-weight-helper-text-no_of_surgery">
+                          {errors.no_of_surgery}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of stay surgery */}
+
+                  {/* stay graft */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="no_of_skin_graft">Number of Skin Graft</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="no_of_skin_graft"
+                        type="number"
+                        value={values.no_of_skin_graft}
+                        name="no_of_skin_graft"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Skin Graft"
+                        error={Boolean(touched.no_of_skin_graft && errors.no_of_skin_graft)}
+                      />
+                      {touched.no_of_skin_graft && errors.no_of_skin_graft && (
+                        <FormHelperText error id="standard-weight-helper-text-no_of_skin_graft">
+                          {errors.no_of_skin_graft}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of graft */}
+
+                  {/* stay debridement */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="no_of_debridement">Number of Debridement</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="no_of_debridement"
+                        type="number"
+                        value={values.no_of_debridement}
+                        name="no_of_debridement"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Debridement"
+                        error={Boolean(touched.no_of_debridement && errors.no_of_debridement)}
+                      />
+                      {touched.no_of_debridement && errors.no_of_debridement && (
+                        <FormHelperText error id="standard-weight-helper-text-no_of_debridement">
+                          {errors.no_of_debridement}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of debridement */}
+
+                  {/* stay amputation */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="no_of_amputation">Number of Amputation</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="no_of_amputation"
+                        type="number"
+                        value={values.no_of_amputation}
+                        name="no_of_amputation"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Amputation"
+                        error={Boolean(touched.no_of_amputation && errors.no_of_amputation)}
+                      />
+                      {touched.no_of_amputation && errors.no_of_amputation && (
+                        <FormHelperText error id="standard-weight-helper-text-no_of_amputation">
+                          {errors.no_of_amputation}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of amputation */}
+
+                  {/* stay dressing */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="no_of_dressing">Number of Dressing</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="no_of_dressing"
+                        type="number"
+                        value={values.no_of_dressing}
+                        name="no_of_dressing"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Dressing"
+                        error={Boolean(touched.no_of_dressing && errors.no_of_dressing)}
+                      />
+                      {touched.no_of_dressing && errors.no_of_dressing && (
+                        <FormHelperText error id="standard-weight-helper-text-no_of_dressing">
+                          {errors.no_of_dressing}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of dressing */}
+
+                  {/* stay nutritional */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="no_of_nutritional">Number of Nutrational</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="no_of_nutritional"
+                        type="number"
+                        value={values.no_of_nutritional}
+                        name="no_of_nutritional"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Nutrational"
+                        error={Boolean(touched.no_of_nutritional && errors.no_of_nutritional)}
+                      />
+                      {touched.no_of_nutritional && errors.no_of_nutritional && (
+                        <FormHelperText error id="standard-weight-helper-text-no_of_nutritional">
+                          {errors.no_of_nutritional}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of nutritional */}
+
+                  {/* stay nutritional */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="medical_support">Medical Support</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="medical_support"
+                        type="number"
+                        value={values.medical_support}
+                        name="medical_support"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Medical Support"
+                        error={Boolean(touched.medical_support && errors.medical_support)}
+                      />
+                      {touched.medical_support && errors.medical_support && (
+                        <FormHelperText error id="standard-weight-helper-text-medical_support">
+                          {errors.medical_support}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of nutritional */}
                 </Grid>
               </DialogContent>
               <DialogActions>

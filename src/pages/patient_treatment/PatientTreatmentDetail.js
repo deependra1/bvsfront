@@ -7,6 +7,7 @@ import useSWR from 'swr';
 import { fetcher } from 'helpers/axios';
 import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
+// import { Container } from '../../../node_modules/@mui/material/index';
 
 const PatientTreatmentDetail = () => {
   const { patientId } = useParams();

@@ -2,54 +2,27 @@ import { Grid, InputLabel, Stack, TextField, Select, MenuItem, RadioGroup, FormC
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import dayjs from 'dayjs';
-import { useState } from 'react';
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
-import { Nepal } from 'utils/nepal__';
 import { fetcher } from '../../../helpers/axios';
 import useSWR from 'swr';
 
-// const provinces = Object.keys(Nepal);
-
-// const today = dayjs();
 const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur, touched }) => {
-  // const [date_of_birth, setDate_of_birth] = useState(values.date_of_birth);
-
-  const [selectedProvince, setSelectedProvince] = useState(values.provence);
-  const [selectedDistrict, setSelectedDistrict] = useState(values.district);
-  const [selectedMunicipality, setSelectedMunicipality] = useState(values.local);
-
   const {
     data: occupationData,
     error: occupationError,
     isLoading: occupationLoading
   } = useSWR(`/occupation/`, fetcher, { revalidateOnMount: true });
+  const { data: ethnicData, error: ethnicError, isLoading: ethnicLoading } = useSWR(`/ethnic/`, fetcher, { revalidateOnMount: true });
+  const {
+    data: religionData,
+    error: religionError,
+    isLoading: religionLoading
+  } = useSWR(`/religion/`, fetcher, { revalidateOnMount: true });
 
-  const handleProvinceChange = (event) => {
-    setSelectedProvince(event.target.value);
-    setSelectedDistrict('');
-    setSelectedMunicipality('');
-  };
-
-  const handleDistrictChange = (event) => {
-    setSelectedDistrict(event.target.value);
-    setSelectedMunicipality('');
-  };
-
-  const handleMunicipalityChange = (event) => {
-    setSelectedMunicipality(event.target.value);
-  };
-  // values.date_of_birth = date_of_birth;
-  values.provence = selectedProvince;
-  values.district = selectedDistrict;
-  values.local = selectedMunicipality;
-
-  if (occupationLoading) {
+  if (occupationLoading || ethnicLoading || religionLoading) {
     return <div>Loading...</div>;
   }
 
-  if (occupationError) {
+  if (occupationError || ethnicError || religionError) {
     return <div>Error on Data</div>;
   }
 
@@ -57,7 +30,7 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
     <>
       <Grid container spacing={3}>
         {/* first name */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="fname">First Name*</InputLabel>
             <TextField
@@ -76,21 +49,18 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
           </Stack>
         </Grid>
         {/* end of first name */}
+
         {/* middle name */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="mname">Middle Name</InputLabel>
-            <TextField fullWidth name="mname" value={values.mname} onChange={handleChange} error={Boolean(touched.mname && errors.mname)} />
-            {errors.mname && (
-              <FormHelperText error id="standard-weight-helper-text-mname">
-                {errors.mname}
-              </FormHelperText>
-            )}
+            <TextField fullWidth name="mname" value={values.mname} onChange={handleChange} onBlur={handleBlur} />
           </Stack>
         </Grid>
         {/* end of middle name */}
+
         {/* last name */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="lname">Last Name*</InputLabel>
             <TextField
@@ -109,158 +79,9 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
           </Stack>
         </Grid>
         {/* end of last name */}
-      </Grid>
 
-      <Grid container spacing={3} mt={1} mb={1}>
-        <Grid item xs={12} md={12}>
-          <Divider>
-            <Chip label="Full Address Information" />
-          </Divider>
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={3}>
-        {/* address main */}
-        <Grid item xs={12}>
-          {/* countries */}
-          <Grid item xs={12} md={2}>
-            <Stack spacing={1}>
-              <InputLabel htmlFor="countries">Select Country*</InputLabel>
-              <Select
-                labelId="countries"
-                id="countries"
-                value={values.country}
-                name="country"
-                onChange={handleChange}
-                error={Boolean(touched.country && errors.country)}
-              >
-                <MenuItem value="Nepal">Nepal</MenuItem>
-                <MenuItem value="Other">Other</MenuItem>
-              </Select>
-            </Stack>
-          </Grid>
-          {/* end of countries name */}
-        </Grid>
-        {/* end of address */}
-
-        {/* provence */}
-        <Grid item xs={12} md={2}>
-          <Stack spacing={1}>
-            <InputLabel htmlFor="provence">Provence*</InputLabel>
-            <Select
-              labelId="provence"
-              id="provence"
-              value={selectedProvince}
-              name="provence"
-              onChange={handleProvinceChange}
-              error={Boolean(touched.provence && errors.provence)}
-            >
-              {Object.keys(Nepal).map((province) => (
-                <MenuItem key={province} value={province}>
-                  {province}
-                </MenuItem>
-              ))}
-            </Select>
-          </Stack>
-        </Grid>
-        {/* end of provence name */}
-
-        {/* district */}
-        {selectedProvince && (
-          <Grid item xs={12} md={2}>
-            <Stack spacing={1}>
-              <InputLabel htmlFor="district">district*</InputLabel>
-              <Select
-                labelId="district"
-                id="district"
-                value={selectedDistrict}
-                name="district"
-                onChange={handleDistrictChange}
-                error={Boolean(touched.district && errors.district)}
-              >
-                <MenuItem value="">Select District</MenuItem>
-                {Object.keys(Nepal[selectedProvince]).map((district) => (
-                  <MenuItem key={district} value={district}>
-                    {district}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Stack>
-          </Grid>
-        )}
-
-        {/* end of district name */}
-
-        {/* local */}
-        {selectedDistrict && (
-          <Grid item xs={12} md={4}>
-            <Stack spacing={1}>
-              <InputLabel htmlFor="local">local*</InputLabel>
-              <Select
-                labelId="local"
-                id="local"
-                value={selectedMunicipality}
-                name="local"
-                onChange={handleMunicipalityChange}
-                error={Boolean(touched.local && errors.local)}
-              >
-                {Nepal[selectedProvince][selectedDistrict].map((municipality) => (
-                  <MenuItem key={municipality} value={municipality}>
-                    {municipality}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Stack>
-          </Grid>
-        )}
-
-        {/* end of local name */}
-
-        {/* ward */}
-        {selectedMunicipality && (
-          <Grid item xs={12} md={1}>
-            <Stack spacing={1}>
-              <InputLabel htmlFor="ward">ward*</InputLabel>
-              <Select
-                labelId="ward"
-                id="ward"
-                value={values.ward}
-                name="ward"
-                onChange={handleChange}
-                error={Boolean(touched.ward && errors.ward)}
-              >
-                {[...Array(36)].map((x, i) => (
-                  <MenuItem key={i} value={i}>
-                    {i}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Stack>
-          </Grid>
-        )}
-        {/* end of ward name */}
-
-        {/* tole */}
-        <Grid item xs={12} md={3}>
-          <Stack spacing={1}>
-            <InputLabel htmlFor="tole">Tole</InputLabel>
-            <TextField fullWidth name="tole" value={values.tole} onChange={handleChange} error={Boolean(touched.tole && errors.tole)} />
-          </Stack>
-        </Grid>
-        {/* end of tole name */}
-      </Grid>
-
-      <Grid container spacing={3} mt={1} mb={1}>
-        <Grid item xs={12} md={12}>
-          <Divider>
-            <Chip label="Other Information" />
-          </Divider>
-        </Grid>
-      </Grid>
-
-      <Grid container spacing={3}>
         {/* dob */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="dob">Date of Birth*</InputLabel>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -272,15 +93,46 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
                 onChange={(newValue) => setFieldValue('date_of_birth', newValue, true)}
                 error={Boolean(touched.date_of_birth && errors.date_of_birth)}
               />
+              {errors.date_of_birth && (
+                <FormHelperText error id="standard-weight-helper-text-date_of_birth">
+                  {errors.date_of_birth}
+                </FormHelperText>
+              )}
             </LocalizationProvider>
           </Stack>
         </Grid>
         {/* end of dob */}
 
-        {/* Age */}
+        {/* gender */}
         <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="age_at_incident">Age at Incident*</InputLabel>
+            <InputLabel htmlFor="gender">Gender*</InputLabel>
+            <RadioGroup
+              row
+              aria-labelledby="gender"
+              defaultValue={values.gender}
+              name="gender"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              // error={Boolean(touched.gender && errors.gender)}
+            >
+              <FormControlLabel value="Female" control={<Radio />} label="Female" />
+              <FormControlLabel value="Male" control={<Radio />} label="Male" />
+              <FormControlLabel value="Other" control={<Radio />} label="Other" />
+            </RadioGroup>
+            {/* {errors.gender && (
+              <FormHelperText error id="standard-weight-helper-text-gender">
+                {errors.gender}
+              </FormHelperText>
+            )} */}
+          </Stack>
+        </Grid>
+        {/* end of gender */}
+
+        {/* Age */}
+        <Grid item xs={12} md={2}>
+          <Stack spacing={1} row>
+            <InputLabel htmlFor="age_at_incident">Years at Incident*</InputLabel>
             <TextField
               fullWidth
               type="number"
@@ -299,31 +151,27 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         </Grid>
         {/* end of age_at_incident */}
 
-        {/* gender */}
-        <Grid item xs={12} md={4}>
-          <Stack spacing={1}>
-            <InputLabel htmlFor="gender">Gender*</InputLabel>
-            <RadioGroup
-              row
-              aria-labelledby="gender"
-              defaultValue={values.gender}
-              name="gender"
+        {/* month */}
+        <Grid item xs={12} md={2}>
+          <Stack spacing={1} row>
+            <InputLabel htmlFor="month_at_incident">Months at Incident*</InputLabel>
+            <TextField
+              fullWidth
+              type="number"
+              name="month_at_incident"
+              value={values.month_at_incident}
               onBlur={handleBlur}
               onChange={handleChange}
-              error={Boolean(touched.gender && errors.gender)}
-            >
-              <FormControlLabel value="Female" control={<Radio />} label="Female" />
-              <FormControlLabel value="Male" control={<Radio />} label="Male" />
-              <FormControlLabel value="Other" control={<Radio />} label="Other" />
-            </RadioGroup>
-            {errors.gender && (
-              <FormHelperText error id="standard-weight-helper-text-gender">
-                {errors.gender}
-              </FormHelperText>
-            )}
+              error={Boolean(touched.month_at_incident && errors.month_at_incident)}
+            />
           </Stack>
+          {errors.month_at_incident && (
+            <FormHelperText error id="standard-weight-helper-text-month_at_incident">
+              {errors.month_at_incident}
+            </FormHelperText>
+          )}
         </Grid>
-        {/* end of gender */}
+        {/* end of age_at_incident */}
 
         {/* Citizenship */}
         <Grid item xs={12} md={4}>
@@ -335,19 +183,46 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
               value={values.citizenship_no}
               onBlur={handleBlur}
               onChange={handleChange}
-              error={Boolean(touched.citizenship_no && errors.citizenship_no)}
+              // error={Boolean(touched.citizenship_no && errors.citizenship_no)}
             />
-            {errors.citizenship_no && (
+            {/* {errors.citizenship_no && (
               <FormHelperText error id="standard-weight-helper-text-citizenship_no">
                 {errors.citizenship_no}
               </FormHelperText>
-            )}
+            )} */}
           </Stack>
         </Grid>
         {/* end of Citizenship */}
 
+        {/* material Status */}
+        <Grid item xs={12} md={3}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="material_status">Material Status</InputLabel>
+            <Select
+              aria-labelledby="material_status"
+              defaultValue={values.material_status}
+              name="material_status"
+              values={values.material_status}
+              onChange={handleChange}
+            >
+              <MenuItem value="Married">Married</MenuItem>
+              <MenuItem value="Unmarried">Unmarried</MenuItem>
+              <MenuItem value="Separated">Separated</MenuItem>
+              <MenuItem value="Divorced">Divorced</MenuItem>
+              <MenuItem value="Widow">Widow</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </Select>
+            {/* {errors.material_status && (
+              <FormHelperText error id="standard-weight-helper-text-material_status">
+                {errors.material_status}
+              </FormHelperText>
+            )} */}
+          </Stack>
+        </Grid>
+        {/* end of material Status */}
+
         {/* contact */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="patient_contact">Patient Contact</InputLabel>
             <TextField
@@ -357,27 +232,77 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
               onChange={handleChange}
               error={Boolean(touched.patient_contact && errors.patient_contact)}
             />
+            {errors.patient_contact && (
+              <FormHelperText error id="standard-weight-helper-text-patient_contact">
+                {errors.patient_contact}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
         {/* end of contact */}
 
-        {/* parent contact */}
-        <Grid item xs={12} md={4}>
+        {/* contact */}
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="parents_contact">Patient Parents Contacts</InputLabel>
+            <InputLabel htmlFor="optional_contact">Optional Contact</InputLabel>
             <TextField
               fullWidth
-              name="parents_contact"
-              value={values.parents_contact}
+              name="optional_contact"
+              value={values.optional_contact}
               onChange={handleChange}
-              error={Boolean(touched.parents_contact && errors.parents_contact)}
+              error={Boolean(touched.optional_contact && errors.optional_contact)}
             />
+            {errors.optional_contact && (
+              <FormHelperText error id="standard-weight-helper-text-optional_contact">
+                {errors.optional_contact}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
-        {/* end of parent contact */}
+        {/* end of contact */}
+
+        {/* education */}
+        <Grid item xs={12} md={3}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="patient_education">Patient Education</InputLabel>
+            <TextField
+              fullWidth
+              name="patient_education"
+              value={values.patient_education}
+              onChange={handleChange}
+              error={Boolean(touched.patient_education && errors.patient_education)}
+            />
+            {errors.patient_education && (
+              <FormHelperText error id="standard-weight-helper-text-patient_education">
+                {errors.patient_education}
+              </FormHelperText>
+            )}
+          </Stack>
+        </Grid>
+        {/* end of education */}
+
+        {/* language */}
+        <Grid item xs={12} md={3}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="patient_language">Language</InputLabel>
+            <TextField
+              fullWidth
+              name="patient_language"
+              value={values.patient_language}
+              onChange={handleChange}
+              error={Boolean(touched.patient_language && errors.patient_language)}
+            />
+            {errors.patient_language && (
+              <FormHelperText error id="standard-weight-helper-text-patient_language">
+                {errors.patient_language}
+              </FormHelperText>
+            )}
+          </Stack>
+        </Grid>
+        {/* end of language */}
 
         {/* occupation */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="patient_occupation">Patient Occupation</InputLabel>
             <Select
@@ -395,53 +320,68 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
                 </MenuItem>
               ))}
             </Select>
+            {errors.patient_occupation && (
+              <FormHelperText error id="standard-weight-helper-text-patient_occupation">
+                {errors.patient_occupation}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
         {/* end of occupation */}
 
-        {/* s occupation */}
-        <Grid item xs={12} md={4}>
+        {/* Ethnic Group */}
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="suppose_occupation">Suppose Occupation</InputLabel>
+            <InputLabel htmlFor="ethnic_group">Ethnic Group</InputLabel>
             <Select
-              labelId="suppose_occupation"
-              id="suppose_occupation"
-              value={values.suppose_occupation}
-              name="suppose_occupation"
+              labelId="ethnic_group"
+              id="ethnic_group"
+              value={values.ethnic_group}
+              name="ethnic_group"
               onChange={handleChange}
-              error={Boolean(touched.suppose_occupation && errors.suppose_occupation)}
+              error={Boolean(touched.ethnic_group && errors.ethnic_group)}
             >
-              {occupationData.map((occupation) => (
-                <MenuItem key={occupation.id} value={occupation.id}>
-                  {occupation.occupation_name}
+              {ethnicData.map((ethnic) => (
+                <MenuItem key={ethnic.id} value={ethnic.id}>
+                  {ethnic.ethnic_group}
                 </MenuItem>
               ))}
             </Select>
+            {errors.ethnic_group && (
+              <FormHelperText error id="standard-weight-helper-text-ethnic_group">
+                {errors.ethnic_group}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
-        {/* end of s occupation */}
+        {/* End of Ethnic Group */}
 
-        {/* p occup */}
-        <Grid item xs={12} md={4}>
+        {/* Religions */}
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="parents_occupation">Parents Occupation</InputLabel>
+            <InputLabel htmlFor="religion">Religion</InputLabel>
             <Select
-              labelId="parents_occupation"
-              id="parents_occupation"
-              value={values.parents_occupation}
-              name="parents_occupation"
+              labelId="religion"
+              id="religion"
+              value={values.religion}
+              name="religion"
               onChange={handleChange}
-              error={Boolean(touched.parents_occupation && errors.parents_occupation)}
+              error={Boolean(touched.ethnic_group && errors.ethnic_group)}
             >
-              {occupationData.map((occupation) => (
-                <MenuItem key={occupation.id} value={occupation.id}>
-                  {occupation.occupation_name}
+              {religionData.map((religion) => (
+                <MenuItem key={religion.id} value={religion.id}>
+                  {religion.religion}
                 </MenuItem>
               ))}
             </Select>
+            {errors.religion && (
+              <FormHelperText error id="standard-weight-helper-text-religion">
+                {errors.religion}
+              </FormHelperText>
+            )}
           </Stack>
         </Grid>
-        {/* end of p occup */}
+        {/* End of Religions Group */}
       </Grid>
     </>
   );

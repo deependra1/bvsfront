@@ -87,16 +87,22 @@ export default function AddPatientDonor() {
   // DataGrid column initalization
   const columns = [
     {
+      field: 'service_title',
+      headerName: 'Provided Services',
+      width: 150,
+      editable: true
+    },
+    {
       field: 'donorName',
       headerName: 'Donor',
-      width: 300,
+      width: 100,
       editable: true,
       valueGetter: (params) => `${params.row.donor.donor_name || ''}`
     },
     {
       field: 'funding_amount',
       headerName: 'Funding Amount',
-      width: 300,
+      width: 150,
       editable: true
     },
 
@@ -104,7 +110,7 @@ export default function AddPatientDonor() {
       field: 'actions',
       headerName: 'Actions',
       type: 'actions',
-      width: 300,
+      width: 100,
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handleEdit(params)} sx={{ color: '#9c27b0' }}>
@@ -125,6 +131,8 @@ export default function AddPatientDonor() {
   };
 
   const handleClose = () => {
+    setSelectedFunding({});
+    setSelectedDonorId('');
     setOpen(false);
   };
   // end of dialog open and close
@@ -230,17 +238,18 @@ export default function AddPatientDonor() {
       {/* end of data grid */}
       <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {selectedFunding.id ? 'Update Treatment Data' : 'Add Treatment Data'}
+          {selectedFunding.id ? 'Update Funding Data' : 'Add Funding Data'}
         </BootstrapDialogTitle>
         <Formik
           enableReinitialize={true}
           initialValues={{
             patient: patientId,
             donor: selectedDonorId || '',
-            funding_amount: selectedFunding?.funding_amount || ''
+            funding_amount: selectedFunding?.funding_amount || '',
+            service_title: selectedFunding?.service_title || ''
           }}
           validationSchema={Yup.object().shape({
-            funding_amount: Yup.number().required('Funding amount is required')
+            funding_amount: Yup.number().required('Required valid amount')
           })}
           onSubmit={handleAddFunding}
         >
@@ -248,10 +257,34 @@ export default function AddPatientDonor() {
             <Form noValidate>
               <DialogContent dividers>
                 <Grid container spacing={3}>
-                  {/* donor info */}
-                  <Grid item xs={12} md={6}>
+                  {/* services  */}
+                  <Grid item xs={12}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="donor">Donor*</InputLabel>
+                      <InputLabel htmlFor="service_title">Service Provided*</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="service_title"
+                        type="text"
+                        value={values.service_title}
+                        name="service_title"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Enter provided services"
+                        error={Boolean(touched.service_title && errors.service_title)}
+                      />
+                      {touched.service_title && errors.service_title && (
+                        <FormHelperText error id="standard-weight-helper-text-service_title">
+                          {errors.service_title}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of services */}
+
+                  {/* donor info */}
+                  <Grid item xs={12}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="donor">Funded By*</InputLabel>
                       <Select
                         fullWidth
                         labelId="donor"
@@ -270,9 +303,10 @@ export default function AddPatientDonor() {
                       </Select>
                     </Stack>
                   </Grid>
-                  {/* end of hospital info */}
-                  {/* donate  */}
-                  <Grid item xs={12} md={6}>
+                  {/* end of donor info */}
+
+                  {/* funded amount  */}
+                  <Grid item xs={12}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="funding_amount">Funding Amount*</InputLabel>
                       <OutlinedInput
@@ -283,7 +317,7 @@ export default function AddPatientDonor() {
                         name="funding_amount"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        placeholder="Enter funding_amount name"
+                        placeholder="Enter funding amount"
                         error={Boolean(touched.funding_amount && errors.funding_amount)}
                       />
                       {touched.funding_amount && errors.funding_amount && (
@@ -293,7 +327,7 @@ export default function AddPatientDonor() {
                       )}
                     </Stack>
                   </Grid>
-                  {/* end of donate */}
+                  {/* end of funded amount */}
                 </Grid>
               </DialogContent>
               <DialogActions>

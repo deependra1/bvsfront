@@ -19,9 +19,9 @@ const PatientDonorDetail = () => {
     return <div>Error on Treatment</div>;
   }
   return (
-    <MainCard title="Patients Donor Detail">
+    <MainCard title="Patients Funding Detail">
       <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
+        {/* <Grid item xs={12} md={12}>
           <Typography variant="h1" align="center">
             BVS-NEPAL
           </Typography>
@@ -30,7 +30,7 @@ const PatientDonorDetail = () => {
           <Typography variant="h3" align="center">
             {patientData.registration_location}
           </Typography>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} md={5}>
           <Stack direction="row" spacing={2}>

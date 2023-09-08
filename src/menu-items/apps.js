@@ -21,21 +21,24 @@ const apps = {
       title: 'Add Patient',
       type: 'item',
       url: '/patient',
-      icon: icons.UserAddOutlined
+      icon: icons.UserAddOutlined,
+      breadcrumbs: false
     },
     {
       id: 'all-patient',
       title: 'List Patient',
       type: 'item',
       url: '/patient-list',
-      icon: icons.OrderedListOutlined
+      icon: icons.OrderedListOutlined,
+      breadcrumbs: false
     },
     {
       id: 'search-patient',
       title: 'Search Patient',
       type: 'item',
       url: '/patient-search',
-      icon: icons.SearchOutlined
+      icon: icons.SearchOutlined,
+      breadcrumbs: false
     },
 
     {
@@ -43,7 +46,8 @@ const apps = {
       title: 'Patient Report',
       type: 'item',
       url: '/patient-report',
-      icon: icons.FileSearchOutlined
+      icon: icons.FileSearchOutlined,
+      breadcrumbs: false
     }
   ]
 };
