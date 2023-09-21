@@ -3,26 +3,27 @@ import { lazy } from 'react';
 // project import
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
-import AddPatient from 'pages/patient/AddPatient';
 import ProtectedRoute from './ProtectedRoute';
-import PatientList from 'pages/patient_list/PatientList';
-import PatientDetail from 'pages/patient_list/PatientDetail';
-import PatientReport from 'pages/patient_report/PatientReport';
-import PatienSearchtList from 'pages/patient_search/PatientSearchList';
-import PatientTreatmentDetail from 'pages/patient_treatment/PatientTreatmentDetail';
-import PatientPhychosocialDetail from 'pages/patient_phychosocial/PatientPhychosocialDetail';
-import PatientPhysiotherapyDetail from 'pages/patient_physiotherapy/PatientPhysiotherapyDetail';
-import PatientDonorDetail from 'pages/patient_donor/PatientDonorDetail';
-import PatientCostDetail from 'pages/patient_cost/PatientCostDetail';
-import DonorDetail from 'pages/add-extra/donor/DonorDetail';
-import OccupationDetail from 'pages/add-extra/occupation/OccupationDetail';
-import EthnicDetail from 'pages/add-extra/ethnic/EthnicDetail';
-import ReligionDetail from 'pages/add-extra/religion/ReligionDetail';
-import FamilyDetail from 'pages/add-extra/family/FamilyDetail';
-import UserDetails from 'pages/users_details/UserDetails';
-import BurnCauseDetail from 'pages/add-extra/burnCause/BurnCauseDetail';
-import BurnTypeDetail from 'pages/add-extra/burnType/BurnTypeDetail';
 
+const AddPatient = Loadable(lazy(() => import('pages/patient/AddPatient')));
+const PatientList = Loadable(lazy(() => import('pages/patient_list/PatientList')));
+const PatientDetail = Loadable(lazy(() => import('pages/patient_list/PatientDetail')));
+const PatientReport = Loadable(lazy(() => import('pages/patient_report/PatientReport')));
+const PatienSearchtList = Loadable(lazy(() => import('pages/patient_search/PatientSearchList')));
+const PatientTreatmentDetail = Loadable(lazy(() => import('pages/patient_treatment/PatientTreatmentDetail')));
+const PatientPhychosocialDetail = Loadable(lazy(() => import('pages/patient_phychosocial/PatientPhychosocialDetail')));
+const PatientPhysiotherapyDetail = Loadable(lazy(() => import('pages/patient_physiotherapy/PatientPhysiotherapyDetail')));
+const PatientDonorDetail = Loadable(lazy(() => import('pages/patient_donor/PatientDonorDetail')));
+const PatientCostDetail = Loadable(lazy(() => import('pages/patient_cost/PatientCostDetail')));
+const DonorDetail = Loadable(lazy(() => import('pages/add-extra/donor/DonorDetail')));
+const OccupationDetail = Loadable(lazy(() => import('pages/add-extra/occupation/OccupationDetail')));
+const EthnicDetail = Loadable(lazy(() => import('pages/add-extra/ethnic/EthnicDetail')));
+const ReligionDetail = Loadable(lazy(() => import('pages/add-extra/religion/ReligionDetail')));
+const FamilyDetail = Loadable(lazy(() => import('pages/add-extra/family/FamilyDetail')));
+const UserDetails = Loadable(lazy(() => import('pages/users_details/UserDetails')));
+const BurnCauseDetail = Loadable(lazy(() => import('pages/add-extra/burnCause/BurnCauseDetail')));
+const BurnTypeDetail = Loadable(lazy(() => import('pages/add-extra/burnType/BurnTypeDetail')));
+const ChangePassword = Loadable(lazy(() => import('pages/users_details/ChangePassword')));
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
@@ -136,6 +137,11 @@ const MainRoutes = {
     {
       path: '/user',
       element: <UserDetails />
+    },
+
+    {
+      path: '/change-password',
+      element: <ChangePassword />
     },
 
     {

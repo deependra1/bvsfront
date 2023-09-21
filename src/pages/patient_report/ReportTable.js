@@ -77,17 +77,20 @@ const PatientTable = () => {
     {
       field: 'patient_occupation',
       headerName: 'Occupation',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.patient_occupation.occupation_name || ''}`
     },
     {
       field: 'ethnic_group',
       headerName: 'Ethnicity',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.ethnic_group.ethnic_group || ''}`
     },
     {
       field: 'religion',
       headerName: 'Religion',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.religion.religion || ''}`
     },
     {
       field: 'material_status',
@@ -134,17 +137,20 @@ const PatientTable = () => {
     {
       field: 'suppose_occupation',
       headerName: 'Suppose Occupation',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.suppose_occupation.occupation_name || ''}`
     },
     {
       field: 'parents_occupation',
       headerName: 'Parents Occupation',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.parents_occupation.occupation_name || ''}`
     },
     {
       field: 'family_type',
       headerName: 'Family Type',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.family_type.family_type || ''}`
     },
     {
       field: 'number_of_child',
@@ -226,12 +232,14 @@ const PatientTable = () => {
     {
       field: 'burn_cause',
       headerName: 'Burn Cause',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.burn_cause.burn_cause || ''}`
     },
     {
       field: 'burn_type',
       headerName: 'Burn Type',
-      width: 100
+      width: 100,
+      valueGetter: (params) => `${params.row.burn_type.burn_type || ''}`
     },
     {
       field: 'place_of_incident',
@@ -257,6 +265,67 @@ const PatientTable = () => {
       field: 'person_contact',
       headerName: 'Person Contact',
       width: 100
+    },
+    //
+    {
+      field: 'treatment_count',
+      headerName: 'Treatment Count',
+      width: 100
+    },
+    {
+      field: 'funding_count',
+      headerName: 'Funding Count',
+      width: 100
+    },
+    {
+      field: 'physiotherapie_count',
+      headerName: 'Physiotherapie Count',
+      width: 100
+    },
+    {
+      field: 'psychosocials_count',
+      headerName: 'Psychosocials Count',
+      width: 100
+    },
+    {
+      field: 'total_funding',
+      headerName: 'Total Funding',
+      width: 100
+    },
+    {
+      field: 'total_surgery',
+      headerName: 'Total Surgery',
+      width: 100
+    },
+    {
+      field: 'total_skin_graft',
+      headerName: 'Total Skin Graft',
+      width: 100
+    },
+    {
+      field: 'total_debridement',
+      headerName: 'Total Debridement',
+      width: 100
+    },
+    {
+      field: 'total_amputation',
+      headerName: 'Total Amputation',
+      width: 100
+    },
+    {
+      field: 'total_dressing',
+      headerName: 'Total Dressing',
+      width: 100
+    },
+    {
+      field: 'total_nutritional',
+      headerName: 'Nutritional Support',
+      width: 100
+    },
+    {
+      field: 'total_medical_support',
+      headerName: 'Medical Support',
+      width: 100
     }
   ];
   // end of column
@@ -281,7 +350,7 @@ const PatientTable = () => {
             }
           }
         }}
-        pageSizeOptions={[25]}
+        pageSizeOptions={[5]}
         // checkboxSelection
         disableRowSelectionOnClick
         slots={{ toolbar: GridToolbar }}

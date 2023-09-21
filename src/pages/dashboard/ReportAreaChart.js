@@ -74,7 +74,7 @@ const ReportAreaChart = () => {
       xaxis: {
         labels: {
           style: {
-            colors: [secondary, secondary, secondary, secondary, secondary, secondary, secondary, secondary]
+            colors: [secondary, primary, secondary, secondary, secondary, secondary, secondary, secondary]
           }
         }
       },
