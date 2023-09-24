@@ -191,9 +191,11 @@ const Profile = () => {
                         <TabPanel value={value} index={0} dir={theme.direction}>
                           <ProfileTab handleLogout={handleLogout} />
                         </TabPanel>
-                        <TabPanel value={value} index={1} dir={theme.direction}>
-                          <SettingTab />
-                        </TabPanel>
+                        {user.is_superuser && (
+                          <TabPanel value={value} index={1} dir={theme.direction}>
+                            <SettingTab />
+                          </TabPanel>
+                        )}
                       </>
                     )}
                   </MainCard>

@@ -5,9 +5,9 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import VaccinesIcon from '@mui/icons-material/Vaccines';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
 
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from 'react-router-dom';
@@ -37,7 +37,7 @@ const PatientSearchTable = () => {
       field: 'actions',
       headerName: 'Actions',
       type: 'actions',
-      width: 650,
+      width: 750,
       renderCell: (params) => (
         <>
           <Stack spacing={1} direction="row">
@@ -50,16 +50,17 @@ const PatientSearchTable = () => {
               onClick={() => handleDonor(params.id)}
               sx={{ color: '#9c27b0' }}
             >
-              Donor
+              Funding
             </Button>
-            <Button variant="outlined" startIcon={<AttachMoneyIcon />} onClick={() => handleCost(params.id)} color="success">
-              Cost
-            </Button>
+
             <Button variant="outlined" startIcon={<PsychologyIcon />} onClick={() => handlePsychosocial(params.id)} color="error">
               Psychosocil
             </Button>
             <Button variant="outlined" startIcon={<SelfImprovementIcon />} onClick={() => handlePhysiotherapy(params.id)} color="warning">
               Physiotherapy
+            </Button>
+            <Button variant="outlined" startIcon={<Diversity1Icon />} onClick={() => handleCost(params.id)} color="success">
+              Reintegration
             </Button>
           </Stack>
         </>
@@ -76,7 +77,7 @@ const PatientSearchTable = () => {
     navigate(`/patient/donor/${id}/`);
   };
   const handleCost = (id) => {
-    navigate(`/patient/cost/${id}/`);
+    navigate(`/patient/reintegration/${id}/`);
   };
   const handlePsychosocial = (id) => {
     navigate(`/patient/phychosocial/${id}/`);
@@ -104,8 +105,6 @@ const PatientSearchTable = () => {
           }
         }}
         pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
       />
     </div>
   );

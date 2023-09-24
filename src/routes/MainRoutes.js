@@ -4,6 +4,7 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import ProtectedRoute from './ProtectedRoute';
+// import PatientReintegrationDetail from 'pages/patient_reintegration/PatientReintegrationDetail';
 
 const AddPatient = Loadable(lazy(() => import('pages/patient/AddPatient')));
 const PatientList = Loadable(lazy(() => import('pages/patient_list/PatientList')));
@@ -14,7 +15,7 @@ const PatientTreatmentDetail = Loadable(lazy(() => import('pages/patient_treatme
 const PatientPhychosocialDetail = Loadable(lazy(() => import('pages/patient_phychosocial/PatientPhychosocialDetail')));
 const PatientPhysiotherapyDetail = Loadable(lazy(() => import('pages/patient_physiotherapy/PatientPhysiotherapyDetail')));
 const PatientDonorDetail = Loadable(lazy(() => import('pages/patient_donor/PatientDonorDetail')));
-const PatientCostDetail = Loadable(lazy(() => import('pages/patient_cost/PatientCostDetail')));
+const PatientReintegrationDetail = Loadable(lazy(() => import('pages/patient_reintegration/PatientReintegrationDetail')));
 const DonorDetail = Loadable(lazy(() => import('pages/add-extra/donor/DonorDetail')));
 const OccupationDetail = Loadable(lazy(() => import('pages/add-extra/occupation/OccupationDetail')));
 const EthnicDetail = Loadable(lazy(() => import('pages/add-extra/ethnic/EthnicDetail')));
@@ -24,17 +25,18 @@ const UserDetails = Loadable(lazy(() => import('pages/users_details/UserDetails'
 const BurnCauseDetail = Loadable(lazy(() => import('pages/add-extra/burnCause/BurnCauseDetail')));
 const BurnTypeDetail = Loadable(lazy(() => import('pages/add-extra/burnType/BurnTypeDetail')));
 const ChangePassword = Loadable(lazy(() => import('pages/users_details/ChangePassword')));
+const QuestionDetail = Loadable(lazy(() => import('pages/add-extra/question/QuestionDetail')));
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
 // render - sample page
-const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
+// const SamplePage = Loadable(lazy(() => import('pages/extra-pages/SamplePage')));
 
-// render - utilities
-const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
-const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
-const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
-const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
+// // render - utilities
+// const Typography = Loadable(lazy(() => import('pages/components-overview/Typography')));
+// const Color = Loadable(lazy(() => import('pages/components-overview/Color')));
+// const Shadow = Loadable(lazy(() => import('pages/components-overview/Shadow')));
+// const AntIcons = Loadable(lazy(() => import('pages/components-overview/AntIcons')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -50,10 +52,10 @@ const MainRoutes = {
       path: '/',
       element: <DashboardDefault />
     },
-    {
-      path: 'color',
-      element: <Color />
-    },
+    // {
+    //   path: 'color',
+    //   element: <Color />
+    // },
 
     {
       path: 'patient',
@@ -94,8 +96,8 @@ const MainRoutes = {
       element: <PatientDonorDetail />
     },
     {
-      path: '/patient/cost/:patientId/',
-      element: <PatientCostDetail />
+      path: '/patient/reintegration/:patientId/',
+      element: <PatientReintegrationDetail />
     },
     {
       path: '/patient-report',
@@ -104,6 +106,10 @@ const MainRoutes = {
     {
       path: '/add-donor',
       element: <DonorDetail />
+    },
+    {
+      path: '/add-question',
+      element: <QuestionDetail />
     },
 
     {
@@ -152,23 +158,23 @@ const MainRoutes = {
           element: <DashboardDefault />
         }
       ]
-    },
-    {
-      path: 'sample-page',
-      element: <SamplePage />
-    },
-    {
-      path: 'shadow',
-      element: <Shadow />
-    },
-    {
-      path: 'typography',
-      element: <Typography />
-    },
-    {
-      path: 'icons/ant',
-      element: <AntIcons />
     }
+    // {
+    //   path: 'sample-page',
+    //   element: <SamplePage />
+    // },
+    // {
+    //   path: 'shadow',
+    //   element: <Shadow />
+    // },
+    // {
+    //   path: 'typography',
+    //   element: <Typography />
+    // },
+    // {
+    //   path: 'icons/ant',
+    //   element: <AntIcons />
+    // }
   ]
 };
 

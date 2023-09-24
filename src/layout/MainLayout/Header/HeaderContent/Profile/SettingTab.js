@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 // material-ui
@@ -6,43 +6,72 @@ import { useTheme } from '@mui/material/styles';
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 
 // assets
-import { CommentOutlined, LockOutlined, UserOutlined, UnorderedListOutlined } from '@ant-design/icons';
-
-// ==============================|| HEADER PROFILE - SETTING TAB ||============================== //
+import { UserOutlined } from '@ant-design/icons';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import WorkIcon from '@mui/icons-material/Work';
+import Diversity3Icon from '@mui/icons-material/Diversity3';
+import TempleBuddhistIcon from '@mui/icons-material/TempleBuddhist';
+import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 const SettingTab = () => {
   const theme = useTheme();
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex(index);
-  };
+  // const [selectedIndex, setSelectedIndex] = useState(0);
+  // const handleListItemClick = (event, index) => {
+  //   setSelectedIndex(index);
+  // };
 
   return (
     <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32, color: theme.palette.grey[500] } }}>
       <ListItemButton component={RouterLink} to="user">
         <ListItemIcon>
-          <UserOutlined />
+          <UserOutlined color="secondary" />
         </ListItemIcon>
         <ListItemText primary="User Setting" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 2} onClick={(event) => handleListItemClick(event, 2)}>
+      <ListItemButton component={RouterLink} to="add-donor">
         <ListItemIcon>
-          <LockOutlined />
+          <VolunteerActivismIcon />
         </ListItemIcon>
-        <ListItemText primary="Privacy Center" />
+        <ListItemText primary="Donors" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 3} onClick={(event) => handleListItemClick(event, 3)}>
+      <ListItemButton component={RouterLink} to="add-occupation">
         <ListItemIcon>
-          <CommentOutlined />
+          <WorkIcon />
         </ListItemIcon>
-        <ListItemText primary="Feedback" />
+        <ListItemText primary="Occupations" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 4} onClick={(event) => handleListItemClick(event, 4)}>
+      <ListItemButton component={RouterLink} to="add-ethnic">
         <ListItemIcon>
-          <UnorderedListOutlined />
+          <Diversity3Icon />
         </ListItemIcon>
-        <ListItemText primary="History" />
+        <ListItemText primary="Ethnic Groups" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-religion">
+        <ListItemIcon>
+          <TempleBuddhistIcon />
+        </ListItemIcon>
+        <ListItemText primary="Religions" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-family">
+        <ListItemIcon>
+          <FamilyRestroomIcon />
+        </ListItemIcon>
+        <ListItemText primary="Family Type" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-burn-type">
+        <ListItemIcon>
+          <LocalFireDepartmentIcon />
+        </ListItemIcon>
+        <ListItemText primary="Burn Type" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-burn-cause">
+        <ListItemIcon>
+          <WhatshotIcon />
+        </ListItemIcon>
+        <ListItemText primary="Burn Cause" />
       </ListItemButton>
     </List>
   );

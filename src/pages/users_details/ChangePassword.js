@@ -32,7 +32,7 @@ const ChangePassword = () => {
   };
   console.log(selectedUser);
   return (
-    <MainCard title="Sample Card">
+    <MainCard title="Change Password">
       <Formik
         initialValues={{
           old_password: '',
