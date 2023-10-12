@@ -111,6 +111,7 @@ export default function AddQuestion() {
   };
 
   const handleClose = () => {
+    setSelectedQuestion({});
     setOpen(false);
   };
   // end of dialog open and close

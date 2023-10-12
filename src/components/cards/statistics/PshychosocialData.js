@@ -1,5 +1,5 @@
 // material-ui
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography, CircularProgress, Alert } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 
 import useSWR from 'swr';
@@ -14,9 +14,12 @@ import PsychologyIcon from '@mui/icons-material/Psychology';
 // ==============================|| STATISTICS - ECOMMERCE CARD  ||============================== //
 
 const PshychosocialData = () => {
-  const { data, isLoading } = useSWR('/pshychosocial/pshychosocial_count', fetcher);
+  const { data, isLoading, isError } = useSWR('/pshychosocial/pshychosocial_count', fetcher);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <CircularProgress color="success" />;
+  if (isError) return <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>;
+  if (!data) return <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>;
+
   return (
     <MainCard contentSX={{ p: 2.25 }}>
       <Grid container>

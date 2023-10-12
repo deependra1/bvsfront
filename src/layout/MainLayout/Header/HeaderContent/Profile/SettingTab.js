@@ -13,6 +13,7 @@ import Diversity3Icon from '@mui/icons-material/Diversity3';
 import TempleBuddhistIcon from '@mui/icons-material/TempleBuddhist';
 import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
+import QuizIcon from '@mui/icons-material/Quiz';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
 
 const SettingTab = () => {
@@ -24,7 +25,16 @@ const SettingTab = () => {
   // };
 
   return (
-    <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32, color: theme.palette.grey[500] } }}>
+    <List
+      component="nav"
+      sx={{
+        p: 0,
+        position: 'relative',
+        overflow: 'auto',
+        maxHeight: 300,
+        '& .MuiListItemIcon-root': { minWidth: 32, color: theme.palette.grey[500] }
+      }}
+    >
       <ListItemButton component={RouterLink} to="user">
         <ListItemIcon>
           <UserOutlined color="secondary" />
@@ -72,6 +82,12 @@ const SettingTab = () => {
           <WhatshotIcon />
         </ListItemIcon>
         <ListItemText primary="Burn Cause" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-question">
+        <ListItemIcon>
+          <QuizIcon />
+        </ListItemIcon>
+        <ListItemText primary="Questionnaire" />
       </ListItemButton>
     </List>
   );

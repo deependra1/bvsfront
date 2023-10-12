@@ -106,6 +106,7 @@ export default function AddOccupation() {
   };
 
   const handleClose = () => {
+    setSelectedOccupation({});
     setOpen(false);
   };
   // end of dialog open and close

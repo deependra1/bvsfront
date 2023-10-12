@@ -65,14 +65,8 @@ BootstrapDialogTitle.propTypes = {
 
 export default function AddDonor() {
   const [open, setOpen] = React.useState(false);
-  // const { patientId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
-  // const [currentPatientId, setCurrentPatientId] = React.useState(patientId);
   const [selectedDonor, setSelectedDonor] = React.useState({});
-
-  // React.useEffect(() => {
-  //   setCurrentPatientId(patientId);
-  // }, [patientId]);
 
   // fetching treatment data
   const {
@@ -123,13 +117,13 @@ export default function AddDonor() {
   };
 
   const handleClose = () => {
+    setSelectedDonor({});
     setOpen(false);
   };
   // end of dialog open and close
 
   // handle edit delete and add
   const handleEdit = (donor) => {
-    // alert(donor.id);
     setSelectedDonor(donor.row);
     setOpen(true);
   };
@@ -234,19 +228,9 @@ export default function AddDonor() {
           initialValues={{
             donor_name: selectedDonor?.donor_name || '',
             donor_address: selectedDonor?.donor_address || ''
-            // hospitalized_date: selectedTreatment.id ? dayjs(selectedTreatment.hospitalized_date) : null,
-            // hospital: selectedTreatment?.hospital || '',
-            // doctor_name: selectedTreatment?.doctor_name || '',
-            // dischared_date: selectedTreatment.id ? dayjs(selectedTreatment.dischared_date) : null,
-            // expired_date: selectedTreatment.id ? dayjs(selectedTreatment.expired_date) : null,
-            // current_status: selectedTreatment?.current_status || ''
           }}
           validationSchema={Yup.object().shape({
             donor_name: Yup.string().required('Donor name is required')
-            // hospitalized_date: Yup.date().typeError('Hospitalized date is required'),
-            // dischared_date: Yup.date().typeError('Dischared date is required'),
-            // doctor_name: Yup.string().required('Doctor name is required'),
-            // current_status: Yup.string().required('Current Status is required')
           })}
           onSubmit={handleAddDonor}
         >

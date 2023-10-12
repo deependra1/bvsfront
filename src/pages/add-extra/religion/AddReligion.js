@@ -106,6 +106,7 @@ export default function AddReligion() {
   };
 
   const handleClose = () => {
+    setSelectedReligion({});
     setOpen(false);
   };
   // end of dialog open and close

@@ -1,12 +1,21 @@
 // assets
-import { UserAddOutlined, OrderedListOutlined, SearchOutlined, FileSearchOutlined } from '@ant-design/icons';
+import {
+  UserAddOutlined,
+  OrderedListOutlined,
+  SearchOutlined,
+  FileSearchOutlined,
+  RedoOutlined,
+  AppstoreAddOutlined
+} from '@ant-design/icons';
 
 // icons
 const icons = {
   UserAddOutlined,
   SearchOutlined,
   OrderedListOutlined,
-  FileSearchOutlined
+  FileSearchOutlined,
+  AppstoreAddOutlined,
+  RedoOutlined
 };
 
 // ==============================|| MENU ITEMS - SAMPLE PAGE & DOCUMENTATION ||============================== //
@@ -26,7 +35,7 @@ const apps = {
     },
     {
       id: 'all-patient',
-      title: 'List Patient',
+      title: 'List, View and Edit Patient',
       type: 'item',
       url: '/patient-list',
       icon: icons.OrderedListOutlined,
@@ -34,10 +43,10 @@ const apps = {
     },
     {
       id: 'search-patient',
-      title: 'Search Patient',
+      title: 'Add Other Informations',
       type: 'item',
       url: '/patient-search',
-      icon: icons.SearchOutlined,
+      icon: icons.AppstoreAddOutlined,
       breadcrumbs: false
     },
 
@@ -47,6 +56,14 @@ const apps = {
       type: 'item',
       url: '/patient-report',
       icon: icons.FileSearchOutlined,
+      breadcrumbs: false
+    },
+    {
+      id: 'post-treatment-report',
+      title: 'Post Treatment Report',
+      type: 'item',
+      url: '/post-treatment-report',
+      icon: icons.RedoOutlined,
       breadcrumbs: false
     }
   ]

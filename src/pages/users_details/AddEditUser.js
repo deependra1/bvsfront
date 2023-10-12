@@ -10,7 +10,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from '@mui/x-data-grid';
 import useSWR from 'swr';
@@ -73,7 +72,7 @@ export default function AddEditUser() {
   const [level, setLevel] = useState();
   const [showPassword, setShowPassword] = useState(false);
   const userActions = useUserActions();
-  const [selectedUser, setSelectedUser] = React.useState({});
+  // const [selectedUser, setSelectedUser] = React.useState({});
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -135,9 +134,6 @@ export default function AddEditUser() {
       width: 100,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleEdit(params)} sx={{ color: '#9c27b0' }}>
-            <EditIcon />
-          </IconButton>
           <IconButton onClick={() => handleDelete(params.id)} sx={{ color: '#f44336' }}>
             <DeleteIcon />
           </IconButton>
@@ -153,16 +149,9 @@ export default function AddEditUser() {
   };
 
   const handleClose = () => {
-    setSelectedUser({});
     setOpen(false);
   };
   // end of dialog open and close
-
-  // handle edit delete and add
-  const handleEdit = (user) => {
-    setSelectedUser(user.row);
-    setOpen(true);
-  };
 
   const handleDelete = (id) => {
     if (confirm('Are you sure to delete user?')) {
@@ -179,40 +168,24 @@ export default function AddEditUser() {
   };
 
   const handleSubmit = async (values, { setErrors, setStatus, setSubmitting }) => {
-    if (selectedUser.id) {
-      axiosService
-        .put(`/user/${selectedUser.id}/`, values)
-        .then(() => {
-          enqueueSnackbar('Updated successfully!!!', { variant: 'success' });
-          setStatus({ success: false });
-          setSubmitting(false);
-          typeMutate();
-          setSelectedUser({});
-        })
-        .catch((err) => {
-          enqueueSnackbar('Something went wrong while adding !!', { variant: 'error' });
-          setStatus({ success: false });
-          setErrors({ submit: err.message });
-          setSubmitting(false);
-        });
-    } else {
-      try {
-        userActions.register(values).catch((err) => {
-          if (err.message) {
-            setErrors(err.request.response);
-          }
-        });
-        userMutate();
-        enqueueSnackbar('User added successfully!!!', { variant: 'success' });
-        setStatus({ success: false });
-        setSubmitting(false);
-        setOpen(false);
-      } catch (err) {
-        console.error(err);
-        setStatus({ success: false });
-        setErrors({ submit: err.message });
-        setSubmitting(false);
-      }
+    try {
+      userActions.register(values).catch((err) => {
+        if (err.message) {
+          setErrors({ submit: err.request.response });
+          console.log(err.detail);
+          setOpen(true);
+        }
+      });
+      userMutate();
+      enqueueSnackbar('User added successfully!!!', { variant: 'success' });
+      setStatus({ success: false });
+      setSubmitting(false);
+      setOpen(false);
+    } catch (err) {
+      console.error(err);
+      setStatus({ success: false });
+      setErrors({ submit: err.message });
+      setSubmitting(false);
     }
   };
 
@@ -258,17 +231,17 @@ export default function AddEditUser() {
       {/* end of data grid */}
       <BootstrapDialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <BootstrapDialogTitle id="customized-dialog-title" onClose={handleClose}>
-          {selectedUser.id ? 'Update User Data' : 'Add User Data'}
+          Add User Data
         </BootstrapDialogTitle>
         <Formik
           initialValues={{
-            first_name: selectedUser?.first_name || '',
-            last_name: selectedUser?.last_name || '',
-            username: selectedUser?.username || '',
-            email: selectedUser?.email || '',
-            location: selectedUser?.location || '',
-            type: selectedUser?.type || '',
-            password: null,
+            first_name: '',
+            last_name: '',
+            username: '',
+            email: '',
+            location: '',
+            type: '',
+            password: '',
             submit: null
           }}
           validationSchema={Yup.object().shape({
@@ -330,11 +303,11 @@ export default function AddEditUser() {
 
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="username-signup">User Name</InputLabel>
+                      <InputLabel htmlFor="username">User Name</InputLabel>
                       <OutlinedInput
                         fullWidth
                         error={Boolean(touched.username && errors.username)}
-                        id="username-signup"
+                        id="username"
                         value={values.username}
                         name="username"
                         onBlur={handleBlur}
@@ -384,8 +357,9 @@ export default function AddEditUser() {
                         onChange={handleChange}
                         error={Boolean(touched.type && errors.type)}
                       >
-                        <MenuItem value="Admin">Admin</MenuItem>
-                        <MenuItem value="Standard">Standard</MenuItem>
+                        <MenuItem value="admin">Admin</MenuItem>
+                        <MenuItem value="strd">Standard</MenuItem>
+                        <MenuItem value="acc">Account</MenuItem>
                       </Select>
                       {touched.type && errors.type && (
                         <FormHelperText error id="helper-text-type">
@@ -476,7 +450,7 @@ export default function AddEditUser() {
                 </Grid>
                 <DialogActions>
                   <Button autoFocus variant="outlined" disableElevation disabled={isSubmitting} onClick={handleSubmit} color="primary">
-                    {selectedUser.id ? 'Update' : 'Create'}
+                    Create
                   </Button>
                   <Button autoFocus variant="outlined" color="error" onClick={handleClose}>
                     Cancel

@@ -12,13 +12,11 @@ import { Formik } from 'formik';
 import AnimateButton from 'components/@extended/AnimateButton';
 
 // assets
-import { useUserActions } from 'hooks/user.actions';
-
-// ============================|| FIREBASE - LOGIN ||============================ //
+import axios from 'axios';
+import { useSnackbar } from 'notistack';
 
 const AuthForget = () => {
-  const userActions = useUserActions();
-
+  const { enqueueSnackbar } = useSnackbar();
   return (
     <>
       <Formik
@@ -30,19 +28,19 @@ const AuthForget = () => {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            userActions.login(values).catch((err) => {
-              if (err.message) {
-                setErrors(err.request.response);
-              }
+          axios
+            .post(`http://127.0.0.1:8000/api/auth/forgot-password/forgot_password/`, values)
+            .then(() => {
+              enqueueSnackbar('Password reset email send successfully!!!', { variant: 'success' });
+              setStatus({ success: false });
+              setSubmitting(false);
+            })
+            .catch((err) => {
+              enqueueSnackbar('Something went wrong !!!', { variant: 'error' });
+              setStatus({ success: false });
+              setErrors({ submit: err.request.response });
+              setSubmitting(false);
             });
-            setStatus({ success: false });
-            setSubmitting(false);
-          } catch (err) {
-            setStatus({ success: false });
-            setErrors({ submit: err.message });
-            setSubmitting(false);
-          }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -74,7 +72,7 @@ const AuthForget = () => {
                 <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={2}>
                   <div></div>
                   <Link variant="h6" component={RouterLink} to="/login" color="text.primary">
-                    Login
+                    Back to login
                   </Link>
                 </Stack>
               </Grid>

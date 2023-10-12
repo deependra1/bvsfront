@@ -1,11 +1,32 @@
-import React from 'react';
-import useSWR from 'swr';
+import React, { useState } from 'react';
+import { Button, TextField, Grid, CircularProgress, Alert } from '@mui/material';
 
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { fetcher } from 'helpers/axios';
+import axiosService from 'helpers/axios';
 
 const PatientTable = () => {
-  const { data, error, isLoading } = useSWR('/patient', fetcher, { refreshInterval: 1000 });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [data, setData] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [error, setError] = useState(false);
+
+  // const { data, error, isLoading, mutate } = useSWR(`/patient/?search=${searchTerm}`, fetcher);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchClick = async () => {
+    setIsSearching(true);
+    try {
+      const response = await axiosService.get(`/patient/?search=${searchTerm}`);
+      setData(response.data); // Set the response data in the state
+    } catch (error) {
+      setError(true);
+      console.log('Something went wrong!!!', error);
+    }
+    setIsSearching(false);
+  };
   // coloum
   const columns = [
     {
@@ -23,6 +44,12 @@ const PatientTable = () => {
     {
       field: 'registration_date',
       headerName: 'Registration Date',
+      width: 150,
+      editable: true
+    },
+    {
+      field: 'registration_location',
+      headerName: 'Branch Office',
       width: 150,
       editable: true
     },
@@ -333,28 +360,46 @@ const PatientTable = () => {
   // end of function
 
   // rendering
-  if (error) return <div>Failed to load</div>;
-  if (isLoading) return <div>Loading...</div>;
-  console.log(data);
+  if (error)
+    return (
+      <div>
+        <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>
+      </div>
+    );
+  if (isSearching)
+    return (
+      <div>
+        <CircularProgress color="success" />
+      </div>
+    );
   return (
     <div>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        // {...data}
-        loading={isLoading}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5
-            }
-          }
-        }}
-        pageSizeOptions={[5]}
-        // checkboxSelection
-        disableRowSelectionOnClick
-        slots={{ toolbar: GridToolbar }}
-      />
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <TextField variant="outlined" placeholder="Search..." value={searchTerm} onChange={handleSearchChange} />
+          <Button variant="outlined" onClick={handleSearchClick} sx={{ padding: 1, marginLeft: 1 }}>
+            Search
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <DataGrid
+            rows={data}
+            columns={columns}
+            loading={isSearching}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5
+                }
+              }
+            }}
+            // pageSizeOptions={[5]}
+            // checkboxSelection
+            disableRowSelectionOnClick
+            slots={{ toolbar: GridToolbar }}
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 };

@@ -3,6 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 import useSWR from 'swr';
 import { fetcher } from 'helpers/axios';
+import { CircularProgress, Alert } from '@mui/material';
 
 const PatientGenderChart = () => {
   const theme = useTheme();
@@ -15,7 +16,9 @@ const PatientGenderChart = () => {
   //   const successDark = theme.palette.success.dark;
   const { data, isLoading, isError } = useSWR('/patient/group_by_gender', fetcher);
 
-  if (isLoading || isError) return <div>Loading</div>;
+  if (isLoading) return <CircularProgress color="success" />;
+  if (isError) return <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>;
+  if (!data) return <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>;
 
   const gender = [];
   const patientCount = [];

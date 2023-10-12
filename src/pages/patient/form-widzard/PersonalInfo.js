@@ -130,13 +130,14 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         {/* end of gender */}
 
         {/* Age */}
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1}>
           <Stack spacing={1} row>
-            <InputLabel htmlFor="age_at_incident">Years at Incident*</InputLabel>
+            <InputLabel htmlFor="age_at_incident">Age</InputLabel>
             <TextField
               fullWidth
-              type="number"
+              type="text"
               name="age_at_incident"
+              placeholder="YY"
               value={values.age_at_incident}
               onBlur={handleBlur}
               onChange={handleChange}
@@ -152,13 +153,14 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         {/* end of age_at_incident */}
 
         {/* month */}
-        <Grid item xs={12} md={2}>
+        <Grid item xs={12} md={1}>
           <Stack spacing={1} row>
-            <InputLabel htmlFor="month_at_incident">Months at Incident*</InputLabel>
+            <InputLabel htmlFor="month_at_incident">&nbsp;</InputLabel>
             <TextField
               fullWidth
-              type="number"
+              type="text"
               name="month_at_incident"
+              placeholder="MM"
               value={values.month_at_incident}
               onBlur={handleBlur}
               onChange={handleChange}
@@ -171,10 +173,71 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
             </FormHelperText>
           )}
         </Grid>
-        {/* end of age_at_incident */}
+        {/* end of month*/}
+
+        {/* month */}
+        <Grid item xs={12} md={1}>
+          <Stack spacing={1} row>
+            <InputLabel htmlFor="day_at_incident">&nbsp;</InputLabel>
+            <TextField
+              fullWidth
+              type="text"
+              name="day_at_incident"
+              placeholder="DD"
+              value={values.day_at_incident}
+              onBlur={handleBlur}
+              onChange={handleChange}
+              error={Boolean(touched.day_at_incident && errors.day_at_incident)}
+            />
+          </Stack>
+          {errors.day_at_incident && (
+            <FormHelperText error id="standard-weight-helper-text-day_at_incident">
+              {errors.day_at_incident}
+            </FormHelperText>
+          )}
+        </Grid>
+        {/* end of month*/}
+
+        {/* occupation */}
+        <Grid item xs={12} md={2}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="age_group">Age Group</InputLabel>
+            <Select
+              fullWidth
+              labelId="age_group"
+              id="age_group"
+              value={values.age_group}
+              name="age_group"
+              onChange={handleChange}
+              error={Boolean(touched.age_group && errors.age_group)}
+            >
+              <MenuItem key="" value="0 to 5">
+                0 to 5
+              </MenuItem>
+              <MenuItem key="" value=" 6 to 11">
+                6 to 11
+              </MenuItem>
+              <MenuItem key="" value="12 to 17">
+                12 to 17
+              </MenuItem>
+              <MenuItem key="" value="18 to 59">
+                18 to 59
+              </MenuItem>
+              <MenuItem key="" value="60 above">
+                60 above
+              </MenuItem>
+            </Select>
+            {errors.age_group && (
+              <FormHelperText error id="standard-weight-helper-text-age_group">
+                {errors.age_group}
+              </FormHelperText>
+            )}
+          </Stack>
+        </Grid>
+        {/* end of occupation */}
 
         {/* Citizenship */}
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="citizenship_no">Citizenship No*</InputLabel>
             <TextField

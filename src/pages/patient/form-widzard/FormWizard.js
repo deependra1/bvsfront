@@ -62,6 +62,8 @@ const FormWizard = () => {
     date_of_birth: patientData ? dayjs(patientData.date_of_birth) : null,
     age_at_incident: patientData?.age_at_incident || null,
     month_at_incident: patientData?.month_at_incident || null,
+    day_at_incident: patientData?.day_at_incident || null,
+    age_group: patientData?.age_group || null,
     gender: patientData?.gender || '',
     citizenship_no: patientData?.citizenship_no || '',
     patient_contact: patientData?.patient_contact || '',
@@ -107,9 +109,8 @@ const FormWizard = () => {
     setFinalValues(values);
     setFinished(true);
     values.registration_date = dayjs(values.registration_date).format('YYYY-MM-DD');
-    values.date_of_birth = dayjs(values.date_of_birth).format('YYYY-MM-DD');
-    // values.date_of_incident = dayjs(values.date_of_incident).format('YYYY-MM-DD');
     values.fiscal_year = dayjs(values.fiscal_year).format('YYYY');
+
     // Update an existing patient's data using PUT request
     if (patientId) {
       axiosService
@@ -123,6 +124,7 @@ const FormWizard = () => {
         });
     } else {
       // Add a new patient using POST request
+      alert(JSON.stringify(values));
       axiosService
         .post('/patient/', values)
         .then(() => {
@@ -158,9 +160,9 @@ const FormWizard = () => {
             validationSchema: Yup.object().shape({
               fname: Yup.string().required('Required'),
               lname: Yup.string().required('Required'),
-              age_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').notRequired().nullable(),
-              month_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').notRequired().nullable(),
-              date_of_birth: Yup.date().required('Required'),
+              age_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').max(199).notRequired().nullable(),
+              month_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').max(12).notRequired().nullable(),
+              day_at_incident: Yup.number().positive('Must be Positive').integer('Must be a number').max(32).notRequired().nullable(),
               patient_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
               optional_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
               patient_occupation: Yup.string().required('Required'),

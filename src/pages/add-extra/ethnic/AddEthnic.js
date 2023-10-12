@@ -106,6 +106,7 @@ export default function AddEthnic() {
   };
 
   const handleClose = () => {
+    setSelectedEthnic({});
     setOpen(false);
   };
   // end of dialog open and close

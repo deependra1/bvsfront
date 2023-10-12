@@ -106,6 +106,7 @@ export default function AddFamily() {
   };
 
   const handleClose = () => {
+    setSelectedFamily({});
     setOpen(false);
   };
   // end of dialog open and close

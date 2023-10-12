@@ -1,5 +1,5 @@
 import axiosService, { fetcher } from 'helpers/axios';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useSWR from 'swr';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -8,11 +8,48 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { DataGrid } from '@mui/x-data-grid';
 import { useNavigate } from '../../../node_modules/react-router-dom/dist/index';
 import { useSnackbar } from 'notistack';
+import { getUser } from 'hooks/user.actions';
+import { Button, TextField, Grid, CircularProgress, Alert } from '@mui/material';
 
 const PatientTable = () => {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, error, isLoading, mutate } = useSWR('/patient', fetcher, { revalidateOnMount: true });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(false);
+
+  const user = getUser();
+  const {
+    data: patientData,
+    error: patientError,
+    isLoading,
+    mutate
+  } = useSWR('/patient/get_latest/', fetcher, { revalidateOnMount: true });
+
+  useEffect(() => {
+    if (searchTerm === '') {
+      setData(patientData || []);
+      setError(patientError);
+    }
+  }, [searchTerm, patientData, patientError]);
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchClick = async () => {
+    setIsSearching(true);
+    try {
+      const response = await axiosService.get(`/patient/?search=${searchTerm}`);
+      setData(response.data); // Set the response data in the state
+    } catch (error) {
+      setError(true);
+      console.log('Something went wrong!!!', error);
+    }
+    setIsSearching(false);
+  };
+
   // coloum
   const columns = [
     {
@@ -54,9 +91,11 @@ const PatientTable = () => {
           <IconButton onClick={() => handleEdit(params.id)} sx={{ color: '#9c27b0' }}>
             <EditIcon />
           </IconButton>
-          <IconButton onClick={() => handleDelete(params.id)} sx={{ color: '#f44336' }}>
-            <DeleteIcon />
-          </IconButton>
+          {user.is_superuser && (
+            <IconButton onClick={() => handleDelete(params.id)} sx={{ color: '#f44336' }}>
+              <DeleteIcon />
+            </IconButton>
+          )}
         </>
       )
     }
@@ -86,25 +125,49 @@ const PatientTable = () => {
   // end of function
 
   // rendering
-  if (error) return <div>Failed to load</div>;
-  if (isLoading) return <div>Loading...</div>;
-  console.log(data);
+  if (error)
+    return (
+      <div>
+        <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>
+      </div>
+    );
+  if (isSearching)
+    return (
+      <div>
+        <CircularProgress color="success" />
+      </div>
+    );
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgress color="success" />
+      </div>
+    );
   return (
     <div>
-      <DataGrid
-        rows={data}
-        columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 5
-            }
-          }
-        }}
-        pageSizeOptions={[5]}
-        checkboxSelection
-        disableRowSelectionOnClick
-      />
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <TextField variant="outlined" placeholder="Search..." value={searchTerm} onChange={handleSearchChange} />
+          <Button variant="outlined" onClick={handleSearchClick} sx={{ padding: 1, marginLeft: 1 }}>
+            Search
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <DataGrid
+            rows={data}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 10
+                }
+              }
+            }}
+            pageSizeOptions={[10]}
+            disableRowSelectionOnClick
+          />
+        </Grid>
+      </Grid>
     </div>
   );
 };

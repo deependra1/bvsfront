@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
+import { FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typography, FormControlLabel, Checkbox } from '@mui/material';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -326,6 +326,7 @@ export default function AddPatientTreatment() {
             expired_date: selectedTreatment.id ? dayjs(selectedTreatment.expired_date) : null,
             mode_of_transport: selectedTreatment?.mode_of_transport || '',
             distance: selectedTreatment?.distance || null,
+            time: selectedTreatment?.time || null,
             duration_of_stay: selectedTreatment?.duration_of_stay || null,
             no_of_surgery: selectedTreatment?.no_of_surgery || null,
             no_of_skin_graft: selectedTreatment?.no_of_skin_graft || null,
@@ -333,7 +334,8 @@ export default function AddPatientTreatment() {
             no_of_amputation: selectedTreatment?.no_of_amputation || null,
             no_of_dressing: selectedTreatment?.no_of_dressing || null,
             no_of_nutritional: selectedTreatment?.no_of_nutritional || null,
-            medical_support: selectedTreatment?.medical_support || null
+            medical_support: selectedTreatment?.medical_support || null,
+            is_post_treatment: selectedTreatment?.is_post_treatment || null
           }}
           validationSchema={Yup.object().shape({
             hospital: Yup.string().required('Required'),
@@ -341,6 +343,7 @@ export default function AddPatientTreatment() {
             doctor_name: Yup.string().required('Required'),
             mode_of_transport: Yup.string().required('Required'),
             distance: Yup.number().positive().integer().notRequired().nullable(),
+            time: Yup.number().positive().notRequired().nullable(),
             duration_of_stay: Yup.number().positive().integer().notRequired().nullable(),
             no_of_surgery: Yup.number().positive().integer().notRequired().nullable(),
             no_of_skin_graft: Yup.number().positive().integer().notRequired().nullable(),
@@ -357,7 +360,7 @@ export default function AddPatientTreatment() {
               <DialogContent dividers>
                 <Grid container spacing={3}>
                   {/* mode of transport */}
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={2}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="mode_of_transport">Mode of Transport*</InputLabel>
                       <OutlinedInput
@@ -381,7 +384,7 @@ export default function AddPatientTreatment() {
                   {/* end of mode of transport */}
 
                   {/* Distance */}
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={2}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="distance">Distance*</InputLabel>
                       <OutlinedInput
@@ -392,7 +395,7 @@ export default function AddPatientTreatment() {
                         name="distance"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        placeholder="Distance"
+                        placeholder="in km"
                         error={Boolean(touched.distance && errors.distance)}
                       />
                       {touched.distance && errors.distance && (
@@ -403,6 +406,30 @@ export default function AddPatientTreatment() {
                     </Stack>
                   </Grid>
                   {/* end of Distance */}
+
+                  {/* time */}
+                  <Grid item xs={12} md={2}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="time">Time*</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="time"
+                        type="Text"
+                        value={values.time}
+                        name="time"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="in hour"
+                        error={Boolean(touched.time && errors.time)}
+                      />
+                      {touched.time && errors.time && (
+                        <FormHelperText error id="standard-weight-helper-text-time">
+                          {errors.time}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of time */}
 
                   {/* hospital info */}
                   <Grid item xs={12} md={3}>
@@ -702,6 +729,24 @@ export default function AddPatientTreatment() {
                     </Stack>
                   </Grid>
                   {/* end of nutritional */}
+                  <Grid item xs={12} md={3}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="is_post_treatment" sx={{ color: '#fff' }}>
+                        .
+                      </InputLabel>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            name="is_post_treatment"
+                            value={values.is_post_treatment}
+                            checked={values.is_post_treatment}
+                            onChange={handleChange}
+                          />
+                        }
+                        label="Is post Treatment"
+                      />
+                    </Stack>
+                  </Grid>
                 </Grid>
               </DialogContent>
               <DialogActions>

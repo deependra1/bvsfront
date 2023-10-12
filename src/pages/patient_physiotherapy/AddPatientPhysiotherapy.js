@@ -143,6 +143,7 @@ export default function AddPatientPhysiotherapy() {
   };
 
   const handleClose = () => {
+    setSelectedPhysiotherapy({});
     setOpen(false);
   };
   // end of dialog open and close

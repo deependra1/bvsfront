@@ -4,7 +4,6 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import ProtectedRoute from './ProtectedRoute';
-// import PatientReintegrationDetail from 'pages/patient_reintegration/PatientReintegrationDetail';
 
 const AddPatient = Loadable(lazy(() => import('pages/patient/AddPatient')));
 const PatientList = Loadable(lazy(() => import('pages/patient_list/PatientList')));
@@ -26,6 +25,8 @@ const BurnCauseDetail = Loadable(lazy(() => import('pages/add-extra/burnCause/Bu
 const BurnTypeDetail = Loadable(lazy(() => import('pages/add-extra/burnType/BurnTypeDetail')));
 const ChangePassword = Loadable(lazy(() => import('pages/users_details/ChangePassword')));
 const QuestionDetail = Loadable(lazy(() => import('pages/add-extra/question/QuestionDetail')));
+const PostTreatmentReport = Loadable(lazy(() => import('pages/patient_report/PostTreatmentReport')));
+
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
 
@@ -102,6 +103,10 @@ const MainRoutes = {
     {
       path: '/patient-report',
       element: <PatientReport />
+    },
+    {
+      path: '/post-treatment-report',
+      element: <PostTreatmentReport />
     },
     {
       path: '/add-donor',

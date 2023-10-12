@@ -106,6 +106,7 @@ export default function AddBurnType() {
   };
 
   const handleClose = () => {
+    setSelectedType({});
     setOpen(false);
   };
   // end of dialog open and close

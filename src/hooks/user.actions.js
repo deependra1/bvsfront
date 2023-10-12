@@ -22,12 +22,12 @@ function useUserActions() {
 
   // Register the user
   function register(data) {
-    // return axios.post(`${baseURL}/auth/register/`, data).then(() => {
-    //   // Registering the account and tokens in the store
-    //   // setUserData(res.data);//if want to set this pass res from then
-    //   navigate('/user');
-    // });
-    return axios.post(`${baseURL}/auth/register/`, data);
+    const auth = JSON.parse(localStorage.getItem('auth'));
+    const headers = {
+      Authorization: `Bearer ${auth.access}`,
+      'Content-Type': 'application/json'
+    };
+    return axios.post(`${baseURL}/auth/register/`, data, { headers });
   }
 
   // Logout the user

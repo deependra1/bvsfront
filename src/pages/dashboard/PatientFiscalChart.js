@@ -1,12 +1,15 @@
 import React from 'react';
-
 import ReactApexChart from 'react-apexcharts';
 import useSWR from 'swr';
 import { fetcher } from 'helpers/axios';
+import { CircularProgress, Alert } from '@mui/material';
 
 const PatientFiscalChart = () => {
   const { data, isLoading, isError } = useSWR('/patient/group_by_fiscal', fetcher);
-  if (isLoading || isError) return <div>Loading</div>;
+
+  if (isLoading) return <CircularProgress color="success" />;
+  if (isError) return <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>;
+  if (!data) return <Alert severity="error">Something went wrong!!! — Please contact your service provider!</Alert>;
 
   const fiscalYears = [];
   const patientCount = [];

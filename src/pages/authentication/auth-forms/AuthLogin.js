@@ -28,8 +28,6 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useUserActions } from 'hooks/user.actions';
 
-// ============================|| FIREBASE - LOGIN ||============================ //
-
 const AuthLogin = () => {
   const [checked, setChecked] = React.useState(false);
   const userActions = useUserActions();
@@ -58,15 +56,16 @@ const AuthLogin = () => {
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
             userActions.login(values).catch((err) => {
-              if (err.message) {
-                setErrors(err.request.response);
+              if (err) {
+                setErrors({ submit: err.request.response });
+                console.log(err.detail);
               }
             });
             setStatus({ success: false });
             setSubmitting(false);
           } catch (err) {
             setStatus({ success: false });
-            setErrors({ submit: err.message });
+            setErrors({ submit: 'An unexpected error occurred.' });
             setSubmitting(false);
           }
         }}
@@ -154,6 +153,7 @@ const AuthLogin = () => {
                   <FormHelperText error>{errors.submit}</FormHelperText>
                 </Grid>
               )}
+
               <Grid item xs={12}>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">

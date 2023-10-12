@@ -154,6 +154,7 @@ export default function AddPatientPhychosocial() {
   };
 
   const handleClose = () => {
+    setSelectedPshychosocial({});
     setOpen(false);
   };
   // end of dialog open and close
