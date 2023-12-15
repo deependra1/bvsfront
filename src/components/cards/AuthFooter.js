@@ -1,5 +1,5 @@
 // material-ui
-import { useMediaQuery, Container, Link, Typography, Stack } from '@mui/material';
+import { useMediaQuery, Container, Typography, Stack } from '@mui/material';
 
 // ==============================|| FOOTER - AUTHENTICATION ||============================== //
 
@@ -15,13 +15,13 @@ const AuthFooter = () => {
         textAlign={matchDownSM ? 'center' : 'inherit'}
       >
         <Typography variant="subtitle2" color="secondary" component="span">
-          &copy; BVS-NEPAL Template By&nbsp;
-          <Typography component={Link} variant="subtitle2" href="https://codedthemes.com" target="_blank" underline="hover">
+          &copy; BVS-NEPAL, Lalitpur, Nepal
+          {/* <Typography component={Link} variant="subtitle2" href="https://codedthemes.com" target="_blank" underline="hover">
             CodedThemes
-          </Typography>
+          </Typography> */}
         </Typography>
 
-        <Stack direction={matchDownSM ? 'column' : 'row'} spacing={matchDownSM ? 1 : 3} textAlign={matchDownSM ? 'center' : 'inherit'}>
+        {/* <Stack direction={matchDownSM ? 'column' : 'row'} spacing={matchDownSM ? 1 : 3} textAlign={matchDownSM ? 'center' : 'inherit'}>
           <Typography variant="subtitle2" color="secondary" component="span">
             Developed By&nbsp;
             <Typography component={Link} variant="subtitle2" href="https://aswinisoft.com" target="_blank" underline="hover">
@@ -34,7 +34,7 @@ const AuthFooter = () => {
               AswiniSoft Pvt. Ltd.
             </Typography>
           </Typography>
-        </Stack>
+        </Stack> */}
       </Stack>
     </Container>
   );
