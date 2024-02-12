@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typography, TextField } from '@mui/material';
+import { FormHelperText, Select, MenuItem, Grid, InputLabel, OutlinedInput, Stack, Typography, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -65,6 +65,7 @@ export default function AddPatientPhychosocial() {
   const { enqueueSnackbar } = useSnackbar();
   const [currentPatientId, setCurrentPatientId] = React.useState(patientId);
   const [selectedPshychosocial, setSelectedPshychosocial] = React.useState({});
+  const [selectedFollowupId, setSelectedFollowupId] = React.useState('');
 
   React.useEffect(() => {
     setCurrentPatientId(patientId);
@@ -77,6 +78,12 @@ export default function AddPatientPhychosocial() {
     isLoading: pshychosocialLoading,
     mutate: pshychosocialMutate
   } = useSWR(`/patient/${currentPatientId}/pshychosocial/`, fetcher, { revalidateOnMount: true });
+
+  const {
+    data: followUpData,
+    error: followUpError,
+    isLoading: followUpLoading
+  } = useSWR(`/follow-up-summary/`, fetcher, { revalidateOnMount: true });
   // end of fetching
 
   // DataGrid column initalization
@@ -115,7 +122,8 @@ export default function AddPatientPhychosocial() {
       field: 'followup_summary',
       headerName: 'Followup Summary',
       width: 100,
-      editable: true
+      editable: true,
+      valueGetter: (params) => `${params.row.followup_summary.follow_up_summary || ''}`
     },
     {
       field: 'mode_of_followup',
@@ -126,6 +134,12 @@ export default function AddPatientPhychosocial() {
     {
       field: 'followed_by',
       headerName: 'Followed By',
+      width: 100,
+      editable: true
+    },
+    {
+      field: 'number_of_counseling',
+      headerName: 'Number of Counseling',
       width: 100,
       editable: true
     },
@@ -155,6 +169,7 @@ export default function AddPatientPhychosocial() {
 
   const handleClose = () => {
     setSelectedPshychosocial({});
+    setSelectedFollowupId('');
     setOpen(false);
   };
   // end of dialog open and close
@@ -162,6 +177,7 @@ export default function AddPatientPhychosocial() {
   // handle edit delete and add
   const handleEdit = (pshychosocial) => {
     setSelectedPshychosocial(pshychosocial.row);
+    setSelectedFollowupId(pshychosocial.row.followup_summary.id);
     setOpen(true);
   };
 
@@ -189,6 +205,7 @@ export default function AddPatientPhychosocial() {
           setSubmitting(false);
           pshychosocialMutate();
           setSelectedPshychosocial({});
+          setSelectedFollowupId('');
         })
         .catch((err) => {
           enqueueSnackbar('Something went wrong while adding the pshychosocial!!!', { variant: 'error' });
@@ -216,11 +233,11 @@ export default function AddPatientPhychosocial() {
   };
   // end of  handle edit delete and add
 
-  if (pshychosocialLoading) {
+  if (pshychosocialLoading || followUpLoading) {
     return <div>Loading...</div>;
   }
 
-  if (pshychosocialError) {
+  if (pshychosocialError || followUpError) {
     return <div>Error on Treatment</div>;
   }
 
@@ -269,16 +286,15 @@ export default function AddPatientPhychosocial() {
             intervention: selectedPshychosocial?.intervention || '',
             changes_after_intervention: selectedPshychosocial?.changes_after_intervention || '',
             detailed_followup_report: selectedPshychosocial?.detailed_followup_report || '',
-            followup_summary: selectedPshychosocial?.followup_summary || '',
+            followup_summary: selectedFollowupId || '',
             mode_of_followup: selectedPshychosocial?.mode_of_followup || '',
-            followed_by: selectedPshychosocial?.followed_by || ''
+            followed_by: selectedPshychosocial?.followed_by || '',
+            number_of_counseling: selectedPshychosocial?.number_of_counseling || ''
           }}
           validationSchema={Yup.object().shape({
-            client_history: Yup.string().required('Client History is required')
-            // hospitalized_date: Yup.date().typeError('Hospitalized date is required'),
-            // dischared_date: Yup.date().typeError('Dischared date is required'),
-            // doctor_name: Yup.string().required('Doctor name is required'),
-            // current_status: Yup.string().required('Current Status is required')
+            client_history: Yup.string().required('Client History is required'),
+            followup_summary: Yup.string().required('Followup Summary is required'),
+            number_of_counseling: Yup.number().typeError().required('Number of counseling is required')
           })}
           onSubmit={handleAddPshychosocial}
         >
@@ -406,30 +422,6 @@ export default function AddPatientPhychosocial() {
                   </Grid>
                   {/* end of client history */}
 
-                  {/* client followup_summary */}
-                  <Grid item xs={12} md={6}>
-                    <Stack spacing={1}>
-                      <InputLabel htmlFor="followup_summary">Followup Summary</InputLabel>
-                      <TextField
-                        fullWidth
-                        multiline
-                        rows={3}
-                        value={values.followup_summary}
-                        name="followup_summary"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        placeholder="Enter followup_summary name"
-                        error={Boolean(touched.followup_summary && errors.followup_summary)}
-                      />
-                      {touched.followup_summary && errors.followup_summary && (
-                        <FormHelperText error id="standard-weight-helper-text-followup_summary">
-                          {errors.followup_summary}
-                        </FormHelperText>
-                      )}
-                    </Stack>
-                  </Grid>
-                  {/* end of client history */}
-
                   {/* client mode_of_followup */}
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
@@ -454,6 +446,34 @@ export default function AddPatientPhychosocial() {
                   </Grid>
                   {/* end of client history */}
 
+                  {/* client followup_summary */}
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="followup_summary">Followup Summary</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="followup_summary"
+                        id="followup_summary"
+                        value={values.followup_summary}
+                        name="followup_summary"
+                        onChange={handleChange}
+                        error={Boolean(touched.followup_summary && errors.followup_summary)}
+                      >
+                        {followUpData.map((followup) => (
+                          <MenuItem key={followup.id} value={followup.id}>
+                            {followup.follow_up_summary}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {touched.followup_summary && errors.followup_summary && (
+                        <FormHelperText error id="standard-weight-helper-text-followup_summary">
+                          {errors.followup_summary}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of followup_summary */}
+
                   {/* followed_by info */}
                   <Grid item xs={12} md={6}>
                     <Stack spacing={1}>
@@ -477,6 +497,29 @@ export default function AddPatientPhychosocial() {
                     </Stack>
                   </Grid>
                   {/* end of hospital info */}
+                  {/* no of councling */}
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="number_of_counseling">Number of Counseling</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="number_of_counseling"
+                        type="number"
+                        value={values.number_of_counseling}
+                        name="number_of_counseling"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Number of Counseling"
+                        error={Boolean(touched.number_of_counseling && errors.number_of_counseling)}
+                      />
+                      {touched.number_of_counseling && errors.number_of_counseling && (
+                        <FormHelperText error id="standard-weight-helper-text-number_of_counseling">
+                          {errors.number_of_counseling}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of counclling */}
                 </Grid>
               </DialogContent>
               <DialogActions>

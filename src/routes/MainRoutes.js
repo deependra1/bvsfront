@@ -4,6 +4,10 @@ import { lazy } from 'react';
 import Loadable from 'components/Loadable';
 import MainLayout from 'layout/MainLayout';
 import ProtectedRoute from './ProtectedRoute';
+import EducationDetail from 'pages/add-extra/education/EducationDetail';
+import HospitalDetail from 'pages/add-extra/hospital/HospitalDetail';
+import LanguageDetail from 'pages/add-extra/language/LanguageDetail';
+import FollowupDetail from 'pages/add-extra/followup/FollowupDetail';
 
 const AddPatient = Loadable(lazy(() => import('pages/patient/AddPatient')));
 const PatientList = Loadable(lazy(() => import('pages/patient_list/PatientList')));
@@ -125,6 +129,25 @@ const MainRoutes = {
     {
       path: '/add-ethnic',
       element: <EthnicDetail />
+    },
+    {
+      path: '/add-education',
+      element: <EducationDetail />
+    },
+
+    {
+      path: '/add-hospital',
+      element: <HospitalDetail />
+    },
+
+    {
+      path: '/add-language',
+      element: <LanguageDetail />
+    },
+
+    {
+      path: '/add-followup',
+      element: <FollowupDetail />
     },
 
     {

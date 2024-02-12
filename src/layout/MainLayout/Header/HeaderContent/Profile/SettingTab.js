@@ -15,6 +15,10 @@ import FamilyRestroomIcon from '@mui/icons-material/FamilyRestroom';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import QuizIcon from '@mui/icons-material/Quiz';
 import WhatshotIcon from '@mui/icons-material/Whatshot';
+import LocalHospitalIcon from '@mui/icons-material/LocalHospital';
+import CastForEducationIcon from '@mui/icons-material/CastForEducation';
+import FollowTheSignsIcon from '@mui/icons-material/FollowTheSigns';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 const SettingTab = () => {
   const theme = useTheme();
@@ -88,6 +92,32 @@ const SettingTab = () => {
           <QuizIcon />
         </ListItemIcon>
         <ListItemText primary="Questionnaire" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-education">
+        <ListItemIcon>
+          <CastForEducationIcon />
+        </ListItemIcon>
+        <ListItemText primary="Education Level" />
+      </ListItemButton>
+      <ListItemButton component={RouterLink} to="add-hospital">
+        <ListItemIcon>
+          <LocalHospitalIcon />
+        </ListItemIcon>
+        <ListItemText primary="Hospital" />
+      </ListItemButton>
+
+      <ListItemButton component={RouterLink} to="add-language">
+        <ListItemIcon>
+          <TranslateIcon />
+        </ListItemIcon>
+        <ListItemText primary="Language" />
+      </ListItemButton>
+
+      <ListItemButton component={RouterLink} to="add-followup">
+        <ListItemIcon>
+          <FollowTheSignsIcon />
+        </ListItemIcon>
+        <ListItemText primary="Followup Summary" />
       </ListItemButton>
     </List>
   );

@@ -42,7 +42,7 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, 
         {/* end of dot */}
 
         {/* Area of burn */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <Stack spacing={1}>
             <InputLabel htmlFor="area_of_burn">Area of Burn</InputLabel>
             <TextField
@@ -57,7 +57,7 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, 
         {/* end of Area of burn */}
 
         {/* percentage of burn */}
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={2}>
           <Stack spacing={1}>
             <InputLabel htmlFor="percentage_of_burn">Percentage of Burn</InputLabel>
             <TextField
@@ -71,6 +71,32 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, 
           </Stack>
         </Grid>
         {/* end of percentage of burn */}
+
+        {/* group of percentage */}
+        <Grid item xs={12} md={2}>
+          <Stack spacing={1}>
+            <InputLabel htmlFor="group_of_percentage">Group of Percentage</InputLabel>
+            <Select
+              aria-labelledby="group_of_percentage"
+              defaultValue={values.group_of_percentage}
+              name="group_of_percentage"
+              values={values.group_of_percentage}
+              onChange={handleChange}
+              error={Boolean(touched.group_of_percentage && errors.group_of_percentage)}
+            >
+              <MenuItem value="0-5">0-5</MenuItem>
+              <MenuItem value="5-10">5-10</MenuItem>
+              <MenuItem value="11-15">11-15</MenuItem>
+              <MenuItem value="16-20">16-20</MenuItem>
+              <MenuItem value="21-25">21-25</MenuItem>
+              <MenuItem value="26-30">26-30</MenuItem>
+              <MenuItem value="31-35">31-35</MenuItem>
+              <MenuItem value="36-40">36-40</MenuItem>
+              <MenuItem value="41-above">41-above</MenuItem>
+            </Select>
+          </Stack>
+        </Grid>
+        {/* end of group of percentage */}
 
         {/* degree of burn */}
         <Grid item xs={12} md={3}>
@@ -196,7 +222,7 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, 
         {/* Contact of Person */}
         <Grid item xs={12} md={4}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="person_contact">Person Contact</InputLabel>
+            <InputLabel htmlFor="person_contact">Patient Party Contact</InputLabel>
             <TextField
               fullWidth
               name="person_contact"

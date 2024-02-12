@@ -68,8 +68,8 @@ const FormWizard = () => {
     citizenship_no: patientData?.citizenship_no || '',
     patient_contact: patientData?.patient_contact || '',
     optional_contact: patientData?.optional_contact || '',
-    patient_education: patientData?.patient_education || '',
-    patient_language: patientData?.patient_language || '',
+    patient_education: patientData ? patientData.patient_education.id : '',
+    patient_language: patientData ? patientData.patient_language.id : '',
     patient_occupation: patientData ? patientData.patient_occupation.id : '',
     ethnic_group: patientData ? patientData.ethnic_group.id : '',
     religion: patientData ? patientData.religion.id : '',
@@ -95,6 +95,7 @@ const FormWizard = () => {
     date_of_incident: patientData ? dayjs(patientData.date_of_incident) : null,
     area_of_burn: patientData?.area_of_burn || '',
     percentage_of_burn: patientData?.percentage_of_burn || '',
+    group_of_percentage: patientData?.group_of_percentage || '',
     degree_of_burn: patientData?.degree_of_burn || '',
     burn_cause: patientData?.burn_cause.id || '',
     burn_type: patientData?.burn_type.id || '',
@@ -167,7 +168,10 @@ const FormWizard = () => {
               optional_contact: Yup.string().matches(phoneRegExp, 'Phone number is not valid').notRequired().nullable(),
               patient_occupation: Yup.string().required('Required'),
               ethnic_group: Yup.string().required('Required'),
-              religion: Yup.string().required('Required')
+              religion: Yup.string().required('Required'),
+              gender: Yup.string().required('Required'),
+              patient_education: Yup.string().required('Required'),
+              patient_language: Yup.string().required('Required')
             })
           },
           {

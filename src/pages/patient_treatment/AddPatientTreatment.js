@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typography, FormControlLabel, Checkbox } from '@mui/material';
+import { FormHelperText, Select, MenuItem, Grid, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -70,6 +70,7 @@ export default function AddPatientTreatment() {
   const { enqueueSnackbar } = useSnackbar();
   const [currentPatientId, setCurrentPatientId] = React.useState(patientId);
   const [selectedTreatment, setSelectedTreatment] = React.useState({});
+  const [selectedHospitalId, setSelectedHospitalId] = React.useState('');
 
   React.useEffect(() => {
     setCurrentPatientId(patientId);
@@ -84,96 +85,106 @@ export default function AddPatientTreatment() {
   } = useSWR(`/patient/${currentPatientId}/treatment/`, fetcher, { revalidateOnMount: true });
   // end of fetching
 
+  const {
+    data: hospitalData,
+    error: hospitalError,
+    isLoading: hospitalLoading
+  } = useSWR(`/hospital/`, fetcher, { revalidateOnMount: true });
+
   // DataGrid column initalization
   const columns = [
     {
       field: 'mode_of_transport',
       headerName: 'Transport',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'distance',
       headerName: 'Distance',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'hospital',
       headerName: 'Hospital',
-      width: 70,
-      editable: true
+      width: 150,
+      editable: true,
+      valueGetter: (params) => `${params.row.hospital.hospital_name || ''}`
     },
     {
       field: 'doctor_name',
       headerName: 'Doctor',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'hospitalized_date',
       headerName: 'Hospitalized',
-      width: 85,
-      editable: true
+      width: 150,
+      editable: true,
+      valueGetter: (params) => `${params.row.hospitalized_date ? dayjs(params.row.hospitalized_date).format('YYYY-MM-DD') : ''}`
     },
     {
       field: 'dischared_date',
       headerName: 'Dischared',
-      width: 70,
-      editable: true
+      width: 150,
+      editable: true,
+      valueGetter: (params) => `${params.row.dischared_date ? dayjs(params.row.dischared_date).format('YYYY-MM-DD') : ''}`
     },
     {
       field: 'expired_date',
       headerName: 'Expired',
-      width: 70,
-      editable: true
+      width: 150,
+      editable: true,
+      valueGetter: (params) => `${params.row.expired_date ? dayjs(params.row.expired_date).format('YYYY-MM-DD') : ''}`
     },
     {
       field: 'duration_of_stay',
       headerName: 'Duration',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'no_of_surgery',
       headerName: 'Surgery',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'no_of_skin_graft',
       headerName: 'Skin Graft',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'no_of_debridement',
       headerName: 'Debridement',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'no_of_amputation',
       headerName: 'Amputation',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'no_of_dressing',
       headerName: 'Dressing',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'no_of_nutritional',
       headerName: 'Nutration',
-      width: 70,
+      width: 150,
       editable: true
     },
     {
       field: 'medical_support',
       headerName: 'Medical',
-      width: 70,
+      width: 150,
       editable: true
     },
 
@@ -181,7 +192,7 @@ export default function AddPatientTreatment() {
       field: 'actions',
       headerName: 'Actions',
       type: 'actions',
-      width: 70,
+      width: 150,
       renderCell: (params) => (
         <>
           <IconButton onClick={() => handleEdit(params)} sx={{ color: '#9c27b0' }}>
@@ -203,6 +214,7 @@ export default function AddPatientTreatment() {
 
   const handleClose = () => {
     setSelectedTreatment({});
+    setSelectedHospitalId('');
     setOpen(false);
   };
   // end of dialog open and close
@@ -210,6 +222,7 @@ export default function AddPatientTreatment() {
   // handle edit delete and add
   const handleEdit = (treatment) => {
     setSelectedTreatment(treatment.row);
+    setSelectedHospitalId(treatment.row.hospital.id);
     setOpen(true);
   };
 
@@ -228,7 +241,8 @@ export default function AddPatientTreatment() {
   };
 
   const handleAddTreatment = (values, { setErrors, setStatus, setSubmitting }) => {
-    // alert(JSON.stringify(values, null, 2));
+    values.duration_of_stay = dayjs(values.dischared_date || values.expired_date).diff(dayjs(values.hospitalized_date), 'days');
+    // alert(JSON.stringify(values));
     if (selectedTreatment.id) {
       axiosService
         .put(`/patient/${patientId}/treatment/${selectedTreatment.id}/`, values)
@@ -238,6 +252,7 @@ export default function AddPatientTreatment() {
           setSubmitting(false);
           treatmentMutate();
           setSelectedTreatment({});
+          setOpen(false);
         })
         .catch((err) => {
           enqueueSnackbar('Something went wrong while adding the patient!!!', { variant: 'error' });
@@ -265,12 +280,12 @@ export default function AddPatientTreatment() {
   };
   // end of  handle edit delete and add
 
-  if (treatmentLoading) {
+  if (treatmentLoading || hospitalLoading) {
     return <div>Loading...</div>;
   }
 
-  if (treatmentError) {
-    return <div>Error on Treatment</div>;
+  if (treatmentError || hospitalError) {
+    return <div>Error on Data</div>;
   }
 
   return (
@@ -320,7 +335,7 @@ export default function AddPatientTreatment() {
           initialValues={{
             patient: patientId,
             hospitalized_date: selectedTreatment.id ? dayjs(selectedTreatment.hospitalized_date) : null,
-            hospital: selectedTreatment?.hospital || '',
+            hospital: selectedHospitalId || '',
             doctor_name: selectedTreatment?.doctor_name || '',
             dischared_date: selectedTreatment.id ? dayjs(selectedTreatment.dischared_date) : null,
             expired_date: selectedTreatment.id ? dayjs(selectedTreatment.expired_date) : null,
@@ -334,8 +349,7 @@ export default function AddPatientTreatment() {
             no_of_amputation: selectedTreatment?.no_of_amputation || null,
             no_of_dressing: selectedTreatment?.no_of_dressing || null,
             no_of_nutritional: selectedTreatment?.no_of_nutritional || null,
-            medical_support: selectedTreatment?.medical_support || null,
-            is_post_treatment: selectedTreatment?.is_post_treatment || null
+            medical_support: selectedTreatment?.medical_support || null
           }}
           validationSchema={Yup.object().shape({
             hospital: Yup.string().required('Required'),
@@ -414,7 +428,7 @@ export default function AddPatientTreatment() {
                       <OutlinedInput
                         fullWidth
                         id="time"
-                        type="Text"
+                        type="number"
                         value={values.time}
                         name="time"
                         onBlur={handleBlur}
@@ -435,17 +449,21 @@ export default function AddPatientTreatment() {
                   <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="hospital">Hospital*</InputLabel>
-                      <OutlinedInput
+                      <Select
                         fullWidth
+                        labelId="hospital"
                         id="hospital"
-                        type="text"
                         value={values.hospital}
                         name="hospital"
-                        onBlur={handleBlur}
                         onChange={handleChange}
-                        placeholder="Enter hospital name"
                         error={Boolean(touched.hospital && errors.hospital)}
-                      />
+                      >
+                        {hospitalData.map((hospital) => (
+                          <MenuItem key={hospital.id} value={hospital.id}>
+                            {hospital.hospital_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
                       {touched.hospital && errors.hospital && (
                         <FormHelperText error id="standard-weight-helper-text-hospital">
                           {errors.hospital}
@@ -482,7 +500,7 @@ export default function AddPatientTreatment() {
                   {/* doa */}
                   <Grid item xs={12} md={3}>
                     <Stack spacing={1}>
-                      <InputLabel htmlFor="dob">Hospitalized Date*</InputLabel>
+                      <InputLabel htmlFor="dob">Admission Date at hospital*</InputLabel>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           name="hospitalized_date"
@@ -546,12 +564,17 @@ export default function AddPatientTreatment() {
                         fullWidth
                         id="duration_of_stay"
                         type="number"
-                        value={values.duration_of_stay}
+                        value={
+                          values.hospitalized_date &&
+                          (values.dischared_date || values.expired_date) &&
+                          dayjs(values.dischared_date || values.expired_date).diff(dayjs(values.hospitalized_date), 'days')
+                        }
                         name="duration_of_stay"
                         onBlur={handleBlur}
                         onChange={handleChange}
                         placeholder="in days"
                         error={Boolean(touched.duration_of_stay && errors.duration_of_stay)}
+                        disabled
                       />
                       {touched.duration_of_stay && errors.duration_of_stay && (
                         <FormHelperText error id="standard-weight-helper-text-duration_of_stay">
@@ -659,7 +682,7 @@ export default function AddPatientTreatment() {
                   {/* end of amputation */}
 
                   {/* stay dressing */}
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="no_of_dressing">Number of Dressing</InputLabel>
                       <OutlinedInput
@@ -683,7 +706,7 @@ export default function AddPatientTreatment() {
                   {/* end of dressing */}
 
                   {/* stay nutritional */}
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="no_of_nutritional">Number of Nutrational</InputLabel>
                       <OutlinedInput
@@ -707,7 +730,7 @@ export default function AddPatientTreatment() {
                   {/* end of nutritional */}
 
                   {/* stay nutritional */}
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <Stack spacing={1}>
                       <InputLabel htmlFor="medical_support">Medical Support</InputLabel>
                       <OutlinedInput
@@ -729,24 +752,6 @@ export default function AddPatientTreatment() {
                     </Stack>
                   </Grid>
                   {/* end of nutritional */}
-                  <Grid item xs={12} md={3}>
-                    <Stack spacing={1}>
-                      <InputLabel htmlFor="is_post_treatment" sx={{ color: '#fff' }}>
-                        .
-                      </InputLabel>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            name="is_post_treatment"
-                            value={values.is_post_treatment}
-                            checked={values.is_post_treatment}
-                            onChange={handleChange}
-                          />
-                        }
-                        label="Is post Treatment"
-                      />
-                    </Stack>
-                  </Grid>
                 </Grid>
               </DialogContent>
               <DialogActions>

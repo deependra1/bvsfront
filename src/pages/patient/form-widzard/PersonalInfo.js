@@ -11,18 +11,32 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
     error: occupationError,
     isLoading: occupationLoading
   } = useSWR(`/occupation/`, fetcher, { revalidateOnMount: true });
+
   const { data: ethnicData, error: ethnicError, isLoading: ethnicLoading } = useSWR(`/ethnic/`, fetcher, { revalidateOnMount: true });
+
   const {
     data: religionData,
     error: religionError,
     isLoading: religionLoading
   } = useSWR(`/religion/`, fetcher, { revalidateOnMount: true });
 
-  if (occupationLoading || ethnicLoading || religionLoading) {
+  const {
+    data: educationData,
+    error: educationError,
+    isLoading: educationLoading
+  } = useSWR(`/educationlevel/`, fetcher, { revalidateOnMount: true });
+
+  const {
+    data: languageData,
+    error: languageError,
+    isLoading: languageLoading
+  } = useSWR(`/language/`, fetcher, { revalidateOnMount: true });
+
+  if (occupationLoading || ethnicLoading || religionLoading || educationLoading || languageLoading) {
     return <div>Loading...</div>;
   }
 
-  if (occupationError || ethnicError || religionError) {
+  if (occupationError || ethnicError || religionError || educationError || languageError) {
     return <div>Error on Data</div>;
   }
 
@@ -114,28 +128,28 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
               name="gender"
               onBlur={handleBlur}
               onChange={handleChange}
-              // error={Boolean(touched.gender && errors.gender)}
+              error={Boolean(touched.gender && errors.gender)}
             >
               <FormControlLabel value="Female" control={<Radio />} label="Female" />
               <FormControlLabel value="Male" control={<Radio />} label="Male" />
               <FormControlLabel value="Other" control={<Radio />} label="Other" />
             </RadioGroup>
-            {/* {errors.gender && (
+            {errors.gender && (
               <FormHelperText error id="standard-weight-helper-text-gender">
                 {errors.gender}
               </FormHelperText>
-            )} */}
+            )}
           </Stack>
         </Grid>
         {/* end of gender */}
 
         {/* Age */}
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Stack spacing={1} row>
             <InputLabel htmlFor="age_at_incident">Age</InputLabel>
             <TextField
               fullWidth
-              type="text"
+              type="number"
               name="age_at_incident"
               placeholder="YY"
               value={values.age_at_incident}
@@ -153,12 +167,12 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         {/* end of age_at_incident */}
 
         {/* month */}
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Stack spacing={1} row>
             <InputLabel htmlFor="month_at_incident">&nbsp;</InputLabel>
             <TextField
               fullWidth
-              type="text"
+              type="number"
               name="month_at_incident"
               placeholder="MM"
               value={values.month_at_incident}
@@ -176,12 +190,12 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         {/* end of month*/}
 
         {/* month */}
-        <Grid item xs={12} md={1}>
+        <Grid item xs={12} md={2}>
           <Stack spacing={1} row>
             <InputLabel htmlFor="day_at_incident">&nbsp;</InputLabel>
             <TextField
               fullWidth
-              type="text"
+              type="number"
               name="day_at_incident"
               placeholder="DD"
               value={values.day_at_incident}
@@ -198,7 +212,7 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         </Grid>
         {/* end of month*/}
 
-        {/* occupation */}
+        {/* age group */}
         <Grid item xs={12} md={2}>
           <Stack spacing={1}>
             <InputLabel htmlFor="age_group">Age Group</InputLabel>
@@ -260,7 +274,7 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         {/* material Status */}
         <Grid item xs={12} md={3}>
           <Stack spacing={1}>
-            <InputLabel htmlFor="material_status">Material Status</InputLabel>
+            <InputLabel htmlFor="material_status">Marital Status</InputLabel>
             <Select
               aria-labelledby="material_status"
               defaultValue={values.material_status}
@@ -328,13 +342,21 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="patient_education">Patient Education</InputLabel>
-            <TextField
+            <Select
               fullWidth
-              name="patient_education"
+              labelId="patient_education"
+              id="patient_education"
               value={values.patient_education}
+              name="patient_education"
               onChange={handleChange}
               error={Boolean(touched.patient_education && errors.patient_education)}
-            />
+            >
+              {educationData.map((education) => (
+                <MenuItem key={education.id} value={education.id}>
+                  {education.education_level}
+                </MenuItem>
+              ))}
+            </Select>
             {errors.patient_education && (
               <FormHelperText error id="standard-weight-helper-text-patient_education">
                 {errors.patient_education}
@@ -348,13 +370,21 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
         <Grid item xs={12} md={3}>
           <Stack spacing={1}>
             <InputLabel htmlFor="patient_language">Language</InputLabel>
-            <TextField
+            <Select
               fullWidth
-              name="patient_language"
+              labelId="patient_language"
+              id="patient_language"
               value={values.patient_language}
+              name="patient_language"
               onChange={handleChange}
               error={Boolean(touched.patient_language && errors.patient_language)}
-            />
+            >
+              {languageData.map((language) => (
+                <MenuItem key={language.id} value={language.id}>
+                  {language.language_name}
+                </MenuItem>
+              ))}
+            </Select>
             {errors.patient_language && (
               <FormHelperText error id="standard-weight-helper-text-patient_language">
                 {errors.patient_language}

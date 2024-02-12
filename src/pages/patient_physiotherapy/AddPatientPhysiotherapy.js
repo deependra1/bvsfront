@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FormHelperText, Grid, InputLabel, OutlinedInput, Stack, Typography, TextField } from '@mui/material';
+import { FormHelperText, Select, MenuItem, Grid, InputLabel, OutlinedInput, Stack, Typography, TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
@@ -65,6 +65,7 @@ export default function AddPatientPhysiotherapy() {
   const { enqueueSnackbar } = useSnackbar();
   const [currentPatientId, setCurrentPatientId] = React.useState(patientId);
   const [selectedPhysiotherapy, setSelectedPhysiotherapy] = React.useState({});
+  const [selectedFollowupId, setSelectedFollowupId] = React.useState('');
 
   React.useEffect(() => {
     setCurrentPatientId(patientId);
@@ -77,6 +78,12 @@ export default function AddPatientPhysiotherapy() {
     isLoading: physiotherapyLoading,
     mutate: physiotherapyMutate
   } = useSWR(`/patient/${currentPatientId}/physiotherapy/`, fetcher, { revalidateOnMount: true });
+
+  const {
+    data: followUpData,
+    error: followUpError,
+    isLoading: followUpLoading
+  } = useSWR(`/follow-up-summary/`, fetcher, { revalidateOnMount: true });
   // end of fetching
 
   // DataGrid column initalization
@@ -119,6 +126,20 @@ export default function AddPatientPhysiotherapy() {
       editable: true
     },
     {
+      field: 'followup_summary',
+      headerName: 'Followup Summary',
+      width: 100,
+      editable: true,
+      valueGetter: (params) => `${params.row.followup_summary.follow_up_summary || ''}`
+    },
+    {
+      field: 'number_of_session',
+      headerName: 'Number of Session',
+      width: 100,
+      editable: true
+    },
+
+    {
       field: 'actions',
       headerName: 'Actions',
       type: 'actions',
@@ -144,6 +165,7 @@ export default function AddPatientPhysiotherapy() {
 
   const handleClose = () => {
     setSelectedPhysiotherapy({});
+    setSelectedFollowupId('');
     setOpen(false);
   };
   // end of dialog open and close
@@ -151,6 +173,7 @@ export default function AddPatientPhysiotherapy() {
   // handle edit delete and add
   const handleEdit = (physiotherapy) => {
     setSelectedPhysiotherapy(physiotherapy.row);
+    setSelectedFollowupId(physiotherapy.row.followup_summary.id);
     setOpen(true);
   };
 
@@ -178,6 +201,7 @@ export default function AddPatientPhysiotherapy() {
           setSubmitting(false);
           physiotherapyMutate();
           setSelectedPhysiotherapy({});
+          setSelectedFollowupId('');
         })
         .catch((err) => {
           enqueueSnackbar('Something went wrong while adding the physiotherapy!!!', { variant: 'error' });
@@ -205,11 +229,11 @@ export default function AddPatientPhysiotherapy() {
   };
   // end of  handle edit delete and add
 
-  if (physiotherapyLoading) {
+  if (physiotherapyLoading || followUpLoading) {
     return <div>Loading...</div>;
   }
 
-  if (physiotherapyError) {
+  if (physiotherapyError || followUpError) {
     return <div>Error on physiotherapy data</div>;
   }
 
@@ -259,14 +283,14 @@ export default function AddPatientPhysiotherapy() {
             observation: selectedPhysiotherapy?.observation || '',
             current_status: selectedPhysiotherapy?.current_status || '',
             mode_of_followup: selectedPhysiotherapy?.mode_of_followup || '',
-            followed_by: selectedPhysiotherapy?.followed_by || ''
+            followed_by: selectedPhysiotherapy?.followed_by || '',
+            followup_summary: selectedFollowupId || '',
+            number_of_session: selectedPhysiotherapy?.number_of_session || ''
           }}
           validationSchema={Yup.object().shape({
-            initial_status: Yup.string().required('Client History is required')
-            // hospitalized_date: Yup.date().typeError('Hospitalized date is required'),
-            // dischared_date: Yup.date().typeError('Dischared date is required'),
-            // doctor_name: Yup.string().required('Doctor name is required'),
-            // current_status: Yup.string().required('Current Status is required')
+            initial_status: Yup.string().required('Client History is required'),
+            followup_summary: Yup.string().required('Followup Summary is required'),
+            number_of_session: Yup.string().required('Number of session is required')
           })}
           onSubmit={handleAddPshychosocial}
         >
@@ -441,6 +465,58 @@ export default function AddPatientPhysiotherapy() {
                     </Stack>
                   </Grid>
                   {/* end of hospital info */}
+
+                  {/* client followup_summary */}
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="followup_summary">Followup Summary</InputLabel>
+                      <Select
+                        fullWidth
+                        labelId="followup_summary"
+                        id="followup_summary"
+                        value={values.followup_summary}
+                        name="followup_summary"
+                        onChange={handleChange}
+                        error={Boolean(touched.followup_summary && errors.followup_summary)}
+                      >
+                        {followUpData.map((followup) => (
+                          <MenuItem key={followup.id} value={followup.id}>
+                            {followup.follow_up_summary}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {touched.followup_summary && errors.followup_summary && (
+                        <FormHelperText error id="standard-weight-helper-text-followup_summary">
+                          {errors.followup_summary}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end of followup_summary */}
+
+                  {/* no of sess */}
+                  <Grid item xs={12} md={6}>
+                    <Stack spacing={1}>
+                      <InputLabel htmlFor="number_of_session">Number of Session*</InputLabel>
+                      <OutlinedInput
+                        fullWidth
+                        id="number_of_session"
+                        type="number"
+                        value={values.number_of_session}
+                        name="number_of_session"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        placeholder="Number of Session"
+                        error={Boolean(touched.number_of_session && errors.number_of_session)}
+                      />
+                      {touched.number_of_session && errors.number_of_session && (
+                        <FormHelperText error id="standard-weight-helper-text-number_of_session">
+                          {errors.number_of_session}
+                        </FormHelperText>
+                      )}
+                    </Stack>
+                  </Grid>
+                  {/* end session */}
                 </Grid>
               </DialogContent>
               <DialogActions>

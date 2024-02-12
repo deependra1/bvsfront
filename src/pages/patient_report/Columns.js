@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 export const columns = [
   {
     field: 'registration_number',
@@ -31,11 +32,19 @@ export const columns = [
   },
 
   {
+    field: 'date_of_birth',
+    headerName: 'Date of Birth',
+    width: 150,
+    editable: true,
+    valueGetter: (params) => `${params.row.date_of_birth ? dayjs(params.row.date_of_birth).format('YYYY-MM-DD') : ''}`
+  },
+
+  {
     field: 'age',
     headerName: 'Age at Incident',
     width: 200,
     valueGetter: (params) =>
-      `${params.row.age_at_incident || ''} years ${params.row.month_at_incident || ''} months ${params.row.day_at_incident || ''} days`
+      `${params.row.age_at_incident || '0'} - ${params.row.month_at_incident || '0'} - ${params.row.day_at_incident || '0'} `
   },
   // from
   {
@@ -87,12 +96,14 @@ export const columns = [
   {
     field: 'patient_education',
     headerName: 'Education',
-    width: 150
+    width: 150,
+    valueGetter: (params) => `${params.row.patient_education.education_level || ''}`
   },
   {
     field: 'patient_language',
     headerName: 'Language',
-    width: 150
+    width: 150,
+    valueGetter: (params) => `${params.row.patient_language.language_name || ''}`
   },
   {
     field: 'patient_occupation',
@@ -262,7 +273,7 @@ export const columns = [
     field: 'date_of_incident',
     headerName: 'Date of Incident',
     width: 150,
-    valueGetter: (params) => `${new Date(params.row.date_of_incident).toDateString() || ''}`
+    valueGetter: (params) => `${params.row.date_of_incident ? dayjs(params.row.date_of_incident).format('YYYY-MM-DD') : ''}`
   },
   {
     field: 'area_of_burn',
@@ -272,6 +283,11 @@ export const columns = [
   {
     field: 'percentage_of_burn',
     headerName: 'Percentage Of Burn',
+    width: 150
+  },
+  {
+    field: 'group_of_percentage',
+    headerName: 'Group in Percentage',
     width: 150
   },
   {
@@ -306,13 +322,16 @@ export const columns = [
     field: 'hospital',
     headerName: 'Hospital Name',
     width: 200,
-    valueGetter: (params) => `${params.row.treatment.map((treat) => treat.hospital).join(' ')}`
+    valueGetter: (params) => `${params.row.treatment.map((treat) => treat.hospital.hospital_name).join(' ')}`
   },
   {
     field: 'hospitalized',
-    headerName: 'Hospitalized Date',
+    headerName: 'Admission Date at hospital',
     width: 200,
-    valueGetter: (params) => `${params.row.treatment.map((treat) => new Date(treat.hospitalized_date).toDateString()).join(' ')}`
+    valueGetter: (params) =>
+      `${params.row.treatment
+        .map((treat) => (treat.hospitalized_date ? dayjs(params.row.hospitalized_date).format('YYYY-MM-DD') : ''))
+        .join(' ')}`
   },
   {
     field: 'doctor_name',
@@ -324,13 +343,17 @@ export const columns = [
     field: 'dischared_date',
     headerName: 'Dischared Date',
     width: 200,
-    valueGetter: (params) => `${params.row.treatment.map((treat) => new Date(treat.dischared_date).toDateString()).join(' ')}`
+    valueGetter: (params) =>
+      `${params.row.treatment
+        .map((treat) => (treat.dischared_date ? dayjs(params.row.dischared_date).format('YYYY-MM-DD') : ''))
+        .join(' ')}`
   },
   {
     field: 'expired_date',
     headerName: 'Expired Date',
     width: 200,
-    valueGetter: (params) => `${params.row.treatment.map((treat) => new Date(treat.expired_date).toDateString()).join(' ')}`
+    valueGetter: (params) =>
+      `${params.row.treatment.map((treat) => (treat.expired_date ? dayjs(params.row.expired_date).format('YYYY-MM-DD') : '')).join(' ')}`
   },
   {
     field: 'mode_of_transport',
@@ -358,7 +381,7 @@ export const columns = [
   },
   {
     field: 'no_of_surgery',
-    headerName: 'NO of Surgery',
+    headerName: 'No of Surgery',
     width: 200,
     valueGetter: (params) => `${params.row.treatment.map((treat) => treat.no_of_surgery).join(' ')}`
   },
@@ -441,6 +464,18 @@ export const columns = [
     width: 200,
     valueGetter: (params) => `${params.row.physiotherapy.map((physio) => physio.followed_by).join(', ')}`
   },
+  {
+    field: 'followup_summary',
+    headerName: 'Followup Summary(Physiotherapie)',
+    width: 200,
+    valueGetter: (params) => `${params.row.physiotherapy.map((phycho) => phycho.followup_summary.follow_up_summary).join(', ')}`
+  },
+  {
+    field: 'number_of_session',
+    headerName: 'Number of Session Provided',
+    width: 200,
+    valueGetter: (params) => `${params.row.physiotherapy.map((physio) => physio.number_of_session).join(', ')}`
+  },
   //psychosocial
   {
     field: 'client_history',
@@ -476,7 +511,7 @@ export const columns = [
     field: 'followup_summary',
     headerName: 'Followup Summary(Psychosocials)',
     width: 200,
-    valueGetter: (params) => `${params.row.psychosocial.map((phycho) => phycho.followup_summary).join(', ')}`
+    valueGetter: (params) => `${params.row.psychosocial.map((phycho) => phycho.followup_summary.follow_up_summary).join(', ')}`
   },
   {
     field: 'mode_of_followup',
@@ -489,6 +524,12 @@ export const columns = [
     headerName: 'Followed By(Psychosocials)',
     width: 200,
     valueGetter: (params) => `${params.row.psychosocial.map((phycho) => phycho.followed_by).join(', ')}`
+  },
+  {
+    field: 'number_of_counseling',
+    headerName: 'Number of Counseling Provided',
+    width: 200,
+    valueGetter: (params) => `${params.row.psychosocial.map((physio) => physio.number_of_counseling).join(', ')}`
   },
   {
     field: 'total_funding',
