@@ -29,7 +29,7 @@ const AuthForget = () => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           axios
-            .post(`http://127.0.0.1:8000/api/auth/forgot-password/forgot_password/`, values)
+            .post(`https://bvsnepal.org/api/auth/forgot-password/forgot_password/`, values)
             .then(() => {
               enqueueSnackbar('Password reset email send successfully!!!', { variant: 'success' });
               setStatus({ success: false });

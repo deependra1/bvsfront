@@ -47,7 +47,7 @@ const AuthReset = () => {
           // alert('clicked');
           // alert(JSON.stringify(values));
           axios
-            .post(`http://bvsnepal.org/api/auth/forgot-password/password_reset_confirm/`, values)
+            .post(`https://bvsnepal.org/api/auth/forgot-password/password_reset_confirm/`, values)
             .then(() => {
               enqueueSnackbar('Password reset successfully!!!', { variant: 'success' });
               setStatus({ success: false });
