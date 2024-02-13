@@ -251,7 +251,7 @@ export default function AddPatientPhychosocial() {
         </Grid>
         <Grid item xs={12} md={6}></Grid>
         <Grid item xs={12} md={2}>
-          <Button variant="outlined" onClick={handleClickOpen}>
+          <Button variant="outlined" onClick={handleClickOpen} disabled={pshychosocialData.length > 0}>
             Add Pshychosocial
           </Button>
         </Grid>

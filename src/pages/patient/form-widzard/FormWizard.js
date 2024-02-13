@@ -111,7 +111,7 @@ const FormWizard = () => {
     setFinished(true);
     values.registration_date = dayjs(values.registration_date).format('YYYY-MM-DD');
     values.fiscal_year = dayjs(values.fiscal_year).format('YYYY');
-
+    console.log(finalValues);
     // Update an existing patient's data using PUT request
     if (patientId) {
       axiosService
@@ -125,7 +125,7 @@ const FormWizard = () => {
         });
     } else {
       // Add a new patient using POST request
-      alert(JSON.stringify(values));
+      // alert(JSON.stringify(values));
       axiosService
         .post('/patient/', values)
         .then(() => {
@@ -245,9 +245,9 @@ const FormWizard = () => {
                   {currentStepIndex === 5 ? 'Finish' : 'Next'}
                 </Button>
               </Box>
-              <Box>
+              {/* <Box>
                 <pre>{JSON.stringify(finalValues, null, 2)}</pre>
-              </Box>
+              </Box> */}
             </>
           );
         }}

@@ -57,15 +57,15 @@ const apps = {
       url: '/patient-report',
       icon: icons.FileSearchOutlined,
       breadcrumbs: false
-    },
-    {
-      id: 'post-treatment-report',
-      title: 'Post Treatment Report',
-      type: 'item',
-      url: '/post-treatment-report',
-      icon: icons.RedoOutlined,
-      breadcrumbs: false
     }
+    // {
+    //   id: 'post-treatment-report',
+    //   title: 'Post Treatment Report',
+    //   type: 'item',
+    //   url: '/post-treatment-report',
+    //   icon: icons.RedoOutlined,
+    //   breadcrumbs: false
+    // }
   ]
 };
 

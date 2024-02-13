@@ -298,7 +298,7 @@ export default function AddPatientTreatment() {
         </Grid>
         <Grid item xs={12} md={6}></Grid>
         <Grid item xs={12} md={2}>
-          <Button variant="outlined" onClick={handleClickOpen}>
+          <Button variant="outlined" onClick={handleClickOpen} disabled={treatmentData.length > 0}>
             Add Treatment
           </Button>
         </Grid>

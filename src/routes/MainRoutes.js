@@ -29,7 +29,7 @@ const BurnCauseDetail = Loadable(lazy(() => import('pages/add-extra/burnCause/Bu
 const BurnTypeDetail = Loadable(lazy(() => import('pages/add-extra/burnType/BurnTypeDetail')));
 const ChangePassword = Loadable(lazy(() => import('pages/users_details/ChangePassword')));
 const QuestionDetail = Loadable(lazy(() => import('pages/add-extra/question/QuestionDetail')));
-const PostTreatmentReport = Loadable(lazy(() => import('pages/patient_report/PostTreatmentReport')));
+// const PostTreatmentReport = Loadable(lazy(() => import('pages/patient_report/PostTreatmentReport')));
 
 // render - dashboard
 const DashboardDefault = Loadable(lazy(() => import('pages/dashboard')));
@@ -108,10 +108,10 @@ const MainRoutes = {
       path: '/patient-report',
       element: <PatientReport />
     },
-    {
-      path: '/post-treatment-report',
-      element: <PostTreatmentReport />
-    },
+    // {
+    //   path: '/post-treatment-report',
+    //   element: <PostTreatmentReport />
+    // },
     {
       path: '/add-donor',
       element: <DonorDetail />

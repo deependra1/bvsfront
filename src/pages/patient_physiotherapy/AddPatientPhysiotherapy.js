@@ -247,7 +247,7 @@ export default function AddPatientPhysiotherapy() {
         </Grid>
         <Grid item xs={12} md={6}></Grid>
         <Grid item xs={12} md={2}>
-          <Button variant="outlined" onClick={handleClickOpen}>
+          <Button variant="outlined" onClick={handleClickOpen} disabled={physiotherapyData.length > 0}>
             Add Physiotherapy
           </Button>
         </Grid>
