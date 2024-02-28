@@ -1,3 +1,4 @@
+// import React, { useState } from 'react';
 import { Grid, InputLabel, Stack, TextField, Select, MenuItem, RadioGroup, FormControlLabel, Radio, FormHelperText } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -372,6 +373,7 @@ const PersonalInfo = ({ errors, values, handleChange, setFieldValue, handleBlur,
             <InputLabel htmlFor="patient_language">Language</InputLabel>
             <Select
               fullWidth
+              multiple
               labelId="patient_language"
               id="patient_language"
               value={values.patient_language}

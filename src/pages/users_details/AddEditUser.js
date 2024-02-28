@@ -381,7 +381,7 @@ export default function AddEditUser() {
                         error={Boolean(touched.location && errors.location)}
                       >
                         <MenuItem value="KTM">Kathmandu</MenuItem>
-                        <MenuItem value="NPG">Nepalgung</MenuItem>
+                        <MenuItem value="NPG">Nepalgunj</MenuItem>
                         <MenuItem value="JNP">Janakpur</MenuItem>
                       </Select>
                       {touched.location && errors.location && (

@@ -4,8 +4,6 @@ import { Grid, Stack, TableContainer, Table, TableHead, TableBody, TableRow, Tab
 import { useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { fetcher } from 'helpers/axios';
-import Divider from '@mui/material/Divider';
-import Chip from '@mui/material/Chip';
 
 const PatientDetail = () => {
   const { patientId } = useParams();
@@ -20,78 +18,6 @@ const PatientDetail = () => {
   return (
     <MainCard title="Patients Detail">
       <Grid container spacing={3}>
-        {/* <Grid item xs={12} md={12}>
-          <Typography variant="h1" align="center">
-            BVS-NEPAL
-          </Typography>
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <Typography variant="h3" align="center">
-            {patientData.registration_location}
-          </Typography>
-        </Grid> */}
-
-        {/* <Grid item xs={12} md={5}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h5" color="primary">
-              Registration No:
-            </Typography>
-            <Typography variant="h6">{patientData.registration_number}</Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={3}></Grid>
-        <Grid item xs={12} md={4}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h5" align="right" color="primary">
-              Registration date:
-            </Typography>
-            <Typography variant="h6" align="right">
-              {patientData.registration_date}
-            </Typography>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12} md={5}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h5" color="primary">
-              Patient Name:
-            </Typography>
-            <Typography variant="h6">
-              {patientData.fname} {patientData.mname} {patientData.lname}
-            </Typography>
-          </Stack>
-        </Grid>
-        <Grid item xs={12} md={3}></Grid>
-        <Grid item xs={12} md={4}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h5" align="right" color="primary">
-              Fiscal Year:
-            </Typography>
-            <Typography variant="h6" align="right">
-              {patientData.fiscal_year}
-            </Typography>
-          </Stack>
-        </Grid>
-
-        <Grid item xs={12}>
-          <Stack direction="row" spacing={2}>
-            <Typography variant="h5" align="right" color="primary">
-              Permanent Address:
-            </Typography>
-            {patientData.country === 'Nepal' && (
-              <Typography variant="h6" align="right">
-                {patientData.local}-{patientData.ward}, {patientData.tole}, {patientData.district}, {patientData.provence},{' '}
-                {patientData.country}
-              </Typography>
-            )}
-            {patientData.country === 'Foreign' && (
-              <Typography variant="h6" align="right">
-                {patientData.foreign_address}
-              </Typography>
-            )}
-          </Stack>
-        </Grid> */}
-
         <Grid item xs={12}>
           <Stack direction="row" spacing={2}>
             <TableContainer component={Paper}>
@@ -235,7 +161,7 @@ const PatientDetail = () => {
                       Patients Education
                     </TableCell>
                     <TableCell>:</TableCell>
-                    <TableCell align="left">{patientData.patient_education}</TableCell>
+                    <TableCell align="left">{patientData.patient_education.education_level}</TableCell>
                   </TableRow>
 
                   <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -243,7 +169,7 @@ const PatientDetail = () => {
                       Language
                     </TableCell>
                     <TableCell>:</TableCell>
-                    <TableCell align="left">{patientData.patient_language}</TableCell>
+                    <TableCell align="left">{patientData.patient_language.map((lm) => lm.language_name).join(', ')}</TableCell>
                   </TableRow>
 
                   <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
@@ -483,11 +409,6 @@ const PatientDetail = () => {
           </Stack>
         </Grid>
 
-        <Grid item xs={12} md={12}>
-          <Divider>
-            <Chip label="TREATMENT" color="primary" />
-          </Divider>
-        </Grid>
         <Grid item xs={12} md={12}></Grid>
       </Grid>
     </MainCard>

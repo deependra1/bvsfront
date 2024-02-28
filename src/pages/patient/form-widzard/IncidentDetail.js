@@ -85,7 +85,7 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, 
               error={Boolean(touched.group_of_percentage && errors.group_of_percentage)}
             >
               <MenuItem value="0-5">0-5</MenuItem>
-              <MenuItem value="5-10">5-10</MenuItem>
+              <MenuItem value="6-10">6-10</MenuItem>
               <MenuItem value="11-15">11-15</MenuItem>
               <MenuItem value="16-20">16-20</MenuItem>
               <MenuItem value="21-25">21-25</MenuItem>
@@ -114,6 +114,8 @@ const IncidentDetail = ({ errors, values, handleChange, setFieldValue, touched, 
               <MenuItem value="II">II</MenuItem>
               <MenuItem value="III">III</MenuItem>
               <MenuItem value="IV">IV</MenuItem>
+              <MenuItem value="Deep">Deep</MenuItem>
+              <MenuItem value="Not Specified">Not Specified</MenuItem>
               <MenuItem value="NA">NA</MenuItem>
             </Select>
           </Stack>

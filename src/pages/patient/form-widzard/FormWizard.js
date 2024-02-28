@@ -29,10 +29,9 @@ const FormWizard = () => {
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const user = getUser();
-  // const [selectedTreatment, setSelectedTreatment] = React.useState({});
 
   const { data: patientData } = useSWR(patientId ? `/patient/${patientId}` : null, fetcher);
-
+  console.log(patientData);
   const initialValues = {
     creator: user.id,
     registration_date: patientData ? dayjs(patientData.registration_date).format('YYYY-MM-DD') : null,
@@ -69,7 +68,9 @@ const FormWizard = () => {
     patient_contact: patientData?.patient_contact || '',
     optional_contact: patientData?.optional_contact || '',
     patient_education: patientData ? patientData.patient_education.id : '',
-    patient_language: patientData ? patientData.patient_language.id : '',
+
+    patient_language: patientData?.patient_language?.map((languageObj) => languageObj.id) || [],
+
     patient_occupation: patientData ? patientData.patient_occupation.id : '',
     ethnic_group: patientData ? patientData.ethnic_group.id : '',
     religion: patientData ? patientData.religion.id : '',
@@ -171,7 +172,7 @@ const FormWizard = () => {
               religion: Yup.string().required('Required'),
               gender: Yup.string().required('Required'),
               patient_education: Yup.string().required('Required'),
-              patient_language: Yup.string().required('Required')
+              patient_language: Yup.array().min(1, 'Please select at least one option')
             })
           },
           {

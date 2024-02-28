@@ -103,7 +103,7 @@ export const columns = [
     field: 'patient_language',
     headerName: 'Language',
     width: 150,
-    valueGetter: (params) => `${params.row.patient_language.language_name || ''}`
+    valueGetter: (params) => `${params.row.patient_language.map((ln) => ln.language_name).join(', ') || ''}`
   },
   {
     field: 'patient_occupation',

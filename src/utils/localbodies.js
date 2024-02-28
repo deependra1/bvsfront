@@ -65,6 +65,7 @@ export const localBodies = {
     'Gaumul Rural Municipality',
     'Himali Rural Municipality',
     'Pandavgufa Rural Municipality',
+    'Jagannath Rural Municipality',
     'Swami Kartik Rural Municipality',
     'Triveni Municipality'
   ],

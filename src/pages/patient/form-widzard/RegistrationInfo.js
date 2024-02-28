@@ -76,7 +76,7 @@ const PersonalInfo = ({ errors, values, handleChange, handleBlur, touched }) => 
             >
               <MenuItem value="KTM">Kathmandu</MenuItem>
               <MenuItem value="JNP">Janakpur</MenuItem>
-              <MenuItem value="NPG">Nepalgung</MenuItem>
+              <MenuItem value="NPG">Nepalgunj</MenuItem>
             </Select>
             {errors.registration_location && (
               <FormHelperText error id="standard-weight-helper-text-registration_location">
